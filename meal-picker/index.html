@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오늘 뭐 먹지? 🍽️</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 30px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: white;
+      font-size: 2rem;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 40px;
+      font-size: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 50px rgba(0,0,0,0.2);
+    }
+
+    .card-header {
+      padding: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      user-select: none;
+    }
+
+    .card-icon {
+      font-size: 2.4rem;
+      line-height: 1;
+    }
+
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #2d2d2d;
+    }
+
+    .card-desc {
+      font-size: 0.82rem;
+      color: #888;
+      margin-top: 3px;
+    }
+
+    .card-arrow {
+      margin-left: auto;
+      font-size: 1.2rem;
+      color: #bbb;
+      transition: transform 0.3s ease;
+    }
+
+    .card.open .card-arrow {
+      transform: rotate(180deg);
+    }
+
+    .card-body {
+      display: none;
+      padding: 0 24px 24px;
+    }
+
+    .card.open .card-body {
+      display: block;
+    }
+
+    .meal-display {
+      background: #f7f7fb;
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 16px;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .meal-label {
+      font-size: 0.78rem;
+      color: #aaa;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .meal-emoji {
+      font-size: 2.2rem;
+      margin-bottom: 4px;
+      opacity: 0;
+      transition: opacity 0.3s ease 0.1s;
+    }
+
+    .meal-emoji.show {
+      opacity: 1;
+    }
+
+    .meal-name {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #2d2d2d;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .meal-name.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .pick-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s ease, filter 0.2s ease;
+      color: white;
+      letter-spacing: 0.5px;
+    }
+
+    .pick-btn:active {
+      transform: scale(0.97);
+    }
+
+    .pick-btn:hover {
+      filter: brightness(1.08);
+    }
+
+    /* 카드별 색상 */
+    .card[data-meal="breakfast"] .card-header { background: linear-gradient(90deg, #fff9f0, #fff3e0); }
+    .card[data-meal="breakfast"] .pick-btn { background: linear-gradient(135deg, #ff9a56, #ff6b35); }
+    .card[data-meal="breakfast"] .card-title { color: #e65100; }
+
+    .card[data-meal="lunch"] .card-header { background: linear-gradient(90deg, #f0f9ff, #e0f4ff); }
+    .card[data-meal="lunch"] .pick-btn { background: linear-gradient(135deg, #56b4ff, #2196f3); }
+    .card[data-meal="lunch"] .card-title { color: #0d47a1; }
+
+    .card[data-meal="dinner"] .card-header { background: linear-gradient(90deg, #f4f0ff, #ede0ff); }
+    .card[data-meal="dinner"] .pick-btn { background: linear-gradient(135deg, #a056ff, #7c3aed); }
+    .card[data-meal="dinner"] .card-title { color: #4a148c; }
+
+    .card[data-meal="dessert"] .card-header { background: linear-gradient(90deg, #fff0f6, #ffe0f0); }
+    .card[data-meal="dessert"] .pick-btn { background: linear-gradient(135deg, #ff6eb4, #e91e8c); }
+    .card[data-meal="dessert"] .card-title { color: #880e4f; }
+
+    .history {
+      margin-top: 14px;
+    }
+
+    .history-title {
+      font-size: 0.78rem;
+      color: #bbb;
+      margin-bottom: 8px;
+    }
+
+    .history-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .history-tag {
+      background: #f0f0f5;
+      color: #666;
+      font-size: 0.78rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.5rem; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>오늘 뭐 먹지? 🍽️</h1>
+<p class="subtitle">카테고리를 선택하고 버튼을 눌러보세요!</p>
+
+<div class="grid" id="grid"></div>
+
+<script>
+  const categories = [
+    {
+      id: 'breakfast',
+      title: '아침식사',
+      icon: '🌅',
+      desc: '하루를 활기차게 시작해요',
+      items: [
+        { name: '토스트', emoji: '🍞' },
+        { name: '계란프라이', emoji: '🍳' },
+        { name: '오트밀', emoji: '🥣' },
+        { name: '팬케이크', emoji: '🥞' },
+        { name: '시리얼', emoji: '🥛' },
+        { name: '죽', emoji: '🍲' },
+        { name: '샌드위치', emoji: '🥪' },
+        { name: '베이글', emoji: '🥯' },
+        { name: '요거트', emoji: '🫙' },
+        { name: '김치볶음밥', emoji: '🍚' },
+        { name: '스크램블에그', emoji: '🍳' },
+        { name: '과일샐러드', emoji: '🍓' },
+      ]
+    },
+    {
+      id: 'lunch',
+      title: '점심식사',
+      icon: '☀️',
+      desc: '에너지 충전 타임!',
+      items: [
+        { name: '비빔밥', emoji: '🥗' },
+        { name: '냉면', emoji: '🍜' },
+        { name: '짜장면', emoji: '🍝' },
+        { name: '짬뽕', emoji: '🍜' },
+        { name: '김치찌개', emoji: '🍲' },
+        { name: '된장찌개', emoji: '🍲' },
+        { name: '순두부찌개', emoji: '🍲' },
+        { name: '갈비탕', emoji: '🥣' },
+        { name: '설렁탕', emoji: '🥣' },
+        { name: '볶음밥', emoji: '🍚' },
+        { name: '제육볶음', emoji: '🥩' },
+        { name: '칼국수', emoji: '🍜' },
+        { name: '라면', emoji: '🍜' },
+        { name: '돈까스', emoji: '🍱' },
+      ]
+    },
+    {
+      id: 'dinner',
+      title: '저녁식사',
+      icon: '🌙',
+      desc: '오늘 하루의 마무리',
+      items: [
+        { name: '스테이크', emoji: '🥩' },
+        { name: '삼겹살', emoji: '🥓' },
+        { name: '갈비', emoji: '🍖' },
+        { name: '치킨', emoji: '🍗' },
+        { name: '피자', emoji: '🍕' },
+        { name: '파스타', emoji: '🍝' },
+        { name: '초밥', emoji: '🍣' },
+        { name: '보쌈', emoji: '🥬' },
+        { name: '족발', emoji: '🍖' },
+        { name: '탕수육', emoji: '🍱' },
+        { name: '마라탕', emoji: '🌶️' },
+        { name: '샤브샤브', emoji: '🍲' },
+        { name: '해물파전', emoji: '🥘' },
+        { name: '쌈밥', emoji: '🥬' },
+      ]
+    },
+    {
+      id: 'dessert',
+      title: '디저트',
+      icon: '🍰',
+      desc: '달콤한 마무리',
+      items: [
+        { name: '아이스크림', emoji: '🍦' },
+        { name: '케이크', emoji: '🎂' },
+        { name: '마카롱', emoji: '🍬' },
+        { name: '붕어빵', emoji: '🐟' },
+        { name: '호떡', emoji: '🥞' },
+        { name: '팥빙수', emoji: '🧊' },
+        { name: '와플', emoji: '🧇' },
+        { name: '크레페', emoji: '🌯' },
+        { name: '티라미수', emoji: '🍰' },
+        { name: '도넛', emoji: '🍩' },
+        { name: '쿠키', emoji: '🍪' },
+        { name: '푸딩', emoji: '🍮' },
+        { name: '타르트', emoji: '🥧' },
+        { name: '초콜릿', emoji: '🍫' },
+      ]
+    }
+  ];
+
+  const historyMap = {};
+
+  function pickRandom(items, current) {
+    if (items.length <= 1) return items[0];
+    let next;
+    do { next = items[Math.floor(Math.random() * items.length)]; }
+    while (next.name === current);
+    return next;
+  }
+
+  function buildCard(cat) {
+    historyMap[cat.id] = [];
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.meal = cat.id;
+
+    card.innerHTML = `
+      <div class="card-header">
+        <span class="card-icon">${cat.icon}</span>
+        <div>
+          <div class="card-title">${cat.title}</div>
+          <div class="card-desc">${cat.desc}</div>
+        </div>
+        <span class="card-arrow">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="meal-display">
+          <div class="meal-label">추천 메뉴</div>
+          <div class="meal-emoji" id="emoji-${cat.id}"></div>
+          <div class="meal-name" id="name-${cat.id}">버튼을 눌러보세요</div>
+        </div>
+        <button class="pick-btn" id="btn-${cat.id}">🎲 랜덤 선택!</button>
+        <div class="history" id="history-${cat.id}" style="display:none">
+          <div class="history-title">이전 선택</div>
+          <div class="history-list" id="tags-${cat.id}"></div>
+        </div>
+      </div>
+    `;
+
+    const header = card.querySelector('.card-header');
+    header.addEventListener('click', () => {
+      card.classList.toggle('open');
+    });
+
+    let currentName = null;
+
+    const btn = card.querySelector(`#btn-${cat.id}`);
+    btn.addEventListener('click', () => {
+      const picked = pickRandom(cat.items, currentName);
+
+      if (currentName && currentName !== picked.name) {
+        const history = historyMap[cat.id];
+        if (!history.includes(currentName)) {
+          history.unshift(currentName);
+          if (history.length > 5) history.pop();
+        }
+        updateHistory(cat.id);
+      }
+
+      currentName = picked.name;
+
+      const nameEl = document.getElementById(`name-${cat.id}`);
+      const emojiEl = document.getElementById(`emoji-${cat.id}`);
+
+      nameEl.classList.remove('show');
+      emojiEl.classList.remove('show');
+
+      setTimeout(() => {
+        nameEl.textContent = picked.name;
+        emojiEl.textContent = picked.emoji;
+        nameEl.classList.add('show');
+        emojiEl.classList.add('show');
+      }, 100);
+    });
+
+    return card;
+  }
+
+  function updateHistory(id) {
+    const list = historyMap[id];
+    const container = document.getElementById(`history-${id}`);
+    const tags = document.getElementById(`tags-${id}`);
+
+    if (list.length === 0) {
+      container.style.display = 'none';
+      return;
+    }
+
+    container.style.display = 'block';
+    tags.innerHTML = list.map(name =>
+      `<span class="history-tag">${name}</span>`
+    ).join('');
+  }
+
+  const grid = document.getElementById('grid');
+  categories.forEach(cat => grid.appendChild(buildCard(cat)));
+</script>
+</body>
+</html>
