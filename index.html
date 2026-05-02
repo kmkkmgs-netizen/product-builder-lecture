@@ -8,508 +8,282 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
-    /* ══════════════════════════════════════
-       CSS VARIABLES
-    ══════════════════════════════════════ */
     :root {
-      --gold:        #c9a84c;
-      --gold-light:  #e8d5a0;
-      --gold-dim:    #7a6330;
+      --gold:       #c9a84c;
+      --gold-light: #e8d5a0;
+      --gold-dim:   #7a6330;
       --trans: 0.4s cubic-bezier(.4,0,.2,1);
     }
-
     [data-theme="dark"] {
-      --bg:          #0e0c0a;
-      --bg2:         #161210;
-      --surface:     rgba(28, 24, 18, 0.92);
-      --surface2:    rgba(36, 31, 23, 0.95);
-      --border:      rgba(201,168,76,0.18);
-      --border-h:    rgba(201,168,76,0.5);
-      --text1:       #f0e9d8;
-      --text2:       #a89878;
-      --text3:       #5a5040;
-      --chip-bg:     rgba(201,168,76,0.1);
-      --chip-color:  #c9a84c;
-      --divider:     rgba(201,168,76,0.12);
-      --shadow:      0 8px 40px rgba(0,0,0,0.6);
-      --shadow-h:    0 20px 60px rgba(0,0,0,0.75);
-      --inset:       rgba(0,0,0,0.35);
-      --glow:        0 0 40px rgba(201,168,76,0.08);
+      --bg:#0e0c0a; --bg2:#161210;
+      --surface:rgba(28,24,18,.92); --surface2:rgba(36,31,23,.95);
+      --border:rgba(201,168,76,.18); --border-h:rgba(201,168,76,.5);
+      --text1:#f0e9d8; --text2:#a89878; --text3:#5a5040;
+      --chip-bg:rgba(201,168,76,.1); --chip-color:#c9a84c;
+      --divider:rgba(201,168,76,.12);
+      --shadow:0 8px 40px rgba(0,0,0,.6); --shadow-h:0 20px 60px rgba(0,0,0,.75);
+      --inset:rgba(0,0,0,.35); --glow:0 0 40px rgba(201,168,76,.08);
+      --exclude-bg:rgba(180,40,40,.18); --exclude-border:rgba(220,80,80,.3);
+      --exclude-text:#e88; --badge-bg:rgba(200,50,50,.15); --badge-color:#e08080;
     }
-
     [data-theme="light"] {
-      --bg:          #f5f0e8;
-      --bg2:         #ede6d8;
-      --surface:     rgba(255,252,245,0.95);
-      --surface2:    rgba(252,248,240,0.98);
-      --border:      rgba(180,145,80,0.2);
-      --border-h:    rgba(180,145,80,0.55);
-      --text1:       #1c1710;
-      --text2:       #7a6840;
-      --text3:       #b8a88a;
-      --chip-bg:     rgba(180,145,80,0.1);
-      --chip-color:  #8a6820;
-      --divider:     rgba(180,145,80,0.15);
-      --shadow:      0 6px 30px rgba(120,90,40,0.12);
-      --shadow-h:    0 16px 50px rgba(120,90,40,0.2);
-      --inset:       rgba(180,145,80,0.06);
-      --glow:        0 0 40px rgba(180,145,80,0.06);
+      --bg:#f5f0e8; --bg2:#ede6d8;
+      --surface:rgba(255,252,245,.95); --surface2:rgba(252,248,240,.98);
+      --border:rgba(180,145,80,.2); --border-h:rgba(180,145,80,.55);
+      --text1:#1c1710; --text2:#7a6840; --text3:#b8a88a;
+      --chip-bg:rgba(180,145,80,.1); --chip-color:#8a6820;
+      --divider:rgba(180,145,80,.15);
+      --shadow:0 6px 30px rgba(120,90,40,.12); --shadow-h:0 16px 50px rgba(120,90,40,.2);
+      --inset:rgba(180,145,80,.06); --glow:0 0 40px rgba(180,145,80,.06);
+      --exclude-bg:rgba(220,60,60,.08); --exclude-border:rgba(200,60,60,.25);
+      --exclude-text:#c04040; --badge-bg:rgba(200,60,60,.1); --badge-color:#b03030;
     }
 
-    /* ══════════════════════════════════════
-       BASE
-    ══════════════════════════════════════ */
-    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
     body {
-      font-family: 'Noto Sans KR', sans-serif;
-      background: var(--bg);
-      color: var(--text1);
-      min-height: 100vh;
-      transition: background var(--trans), color var(--trans);
-      overflow-x: hidden;
+      font-family:'Noto Sans KR',sans-serif;
+      background:var(--bg); color:var(--text1);
+      min-height:100vh; transition:background var(--trans),color var(--trans);
+      overflow-x:hidden;
     }
-
-    /* noise texture overlay */
     body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-      opacity: .5;
+      content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      opacity:.5;
     }
+    .page { position:relative; z-index:1; max-width:1160px; margin:0 auto; padding:60px 24px 80px; }
 
-    .page {
-      position: relative; z-index: 1;
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 60px 24px 80px;
-    }
-
-    /* ══════════════════════════════════════
-       HEADER
-    ══════════════════════════════════════ */
-    header {
-      text-align: center;
-      margin-bottom: 64px;
-      position: relative;
-    }
-
-    .header-ornament {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      margin-bottom: 20px;
-      opacity: .55;
-    }
-    .ornament-line {
-      flex: 1; max-width: 120px; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold));
-    }
-    .ornament-line.right {
-      background: linear-gradient(90deg, var(--gold), transparent);
-    }
-    .ornament-diamond {
-      width: 6px; height: 6px;
-      background: var(--gold);
-      transform: rotate(45deg);
-    }
-
-    .site-title {
-      font-family: 'Cormorant Garamond', 'Noto Sans KR', serif;
-      font-size: clamp(2rem, 5vw, 3.4rem);
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      color: var(--text1);
-      line-height: 1.1;
-      transition: color var(--trans);
-    }
-    .site-title span {
-      background: linear-gradient(135deg, var(--gold-light), var(--gold));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .site-sub {
-      margin-top: 14px;
-      font-size: 0.88rem;
-      color: var(--text2);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      font-weight: 300;
-      transition: color var(--trans);
-    }
-
-    /* theme toggle */
+    /* ── HEADER ── */
+    header { text-align:center; margin-bottom:56px; position:relative; }
+    .header-ornament { display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:20px; opacity:.55; }
+    .ornament-line { flex:1; max-width:120px; height:1px; background:linear-gradient(90deg,transparent,var(--gold)); }
+    .ornament-line.right { background:linear-gradient(90deg,var(--gold),transparent); }
+    .ornament-diamond { width:6px; height:6px; background:var(--gold); transform:rotate(45deg); }
+    .site-title { font-family:'Cormorant Garamond',serif; font-size:clamp(2rem,5vw,3.4rem); font-weight:700; letter-spacing:.04em; color:var(--text1); transition:color var(--trans); }
+    .site-title span { background:linear-gradient(135deg,var(--gold-light),var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .site-sub { margin-top:14px; font-size:.88rem; color:var(--text2); letter-spacing:.12em; text-transform:uppercase; font-weight:300; transition:color var(--trans); }
     .theme-toggle {
-      position: absolute;
-      top: 0; right: 0;
-      display: flex; align-items: center; gap: 7px;
-      padding: 8px 18px;
-      border-radius: 40px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text2);
-      font-size: 0.78rem;
-      font-family: 'Noto Sans KR', sans-serif;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      cursor: pointer;
-      transition: border-color 0.2s, color 0.2s, background var(--trans);
-      backdrop-filter: blur(12px);
+      position:absolute; top:0; right:0;
+      display:flex; align-items:center; gap:7px;
+      padding:8px 18px; border-radius:40px;
+      border:1px solid var(--border); background:var(--surface);
+      color:var(--text2); font-size:.78rem; font-family:'Noto Sans KR',sans-serif;
+      font-weight:500; letter-spacing:.06em; cursor:pointer;
+      transition:border-color .2s,color .2s,background var(--trans); backdrop-filter:blur(12px);
     }
-    .theme-toggle:hover { border-color: var(--gold); color: var(--gold); }
-    .theme-toggle svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+    .theme-toggle:hover { border-color:var(--gold); color:var(--gold); }
+    .theme-toggle svg { width:14px; height:14px; fill:currentColor; flex-shrink:0; }
+
+    /* ── SECTION HEADER ── */
+    .section-header { display:flex; align-items:center; gap:16px; margin-bottom:28px; }
+    .section-header-line { flex:1; height:1px; background:var(--divider); }
+    .section-label { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); }
+    .section-dot { width:4px; height:4px; background:var(--gold); border-radius:50%; opacity:.6; }
 
     /* ══════════════════════════════════════
-       SECTION LABEL
+       ALLERGEN FILTER PANEL
     ══════════════════════════════════════ */
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 32px;
+    .allergen-panel {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:18px; margin-bottom:48px; overflow:hidden;
+      box-shadow:var(--shadow); backdrop-filter:blur(16px);
+      transition:background var(--trans);
     }
-    .section-header-line {
-      flex: 1; height: 1px;
-      background: var(--divider);
+    .allergen-toggle {
+      width:100%; padding:18px 24px;
+      display:flex; align-items:center; gap:14px;
+      cursor:pointer; user-select:none; background:none; border:none;
+      color:var(--text1); font-family:'Noto Sans KR',sans-serif;
+      transition:background .2s;
     }
-    .section-label {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
+    .allergen-toggle:hover { background:var(--inset); }
+    .allergen-toggle-icon { font-size:1.3rem; }
+    .allergen-toggle-text { font-size:1rem; font-weight:700; color:var(--text1); }
+    .allergen-toggle-sub { font-size:.78rem; color:var(--text2); margin-left:4px; font-weight:400; }
+    .allergen-toggle-arrow { margin-left:auto; color:var(--text3); font-size:.7rem; letter-spacing:.1em; transition:transform .3s,color .2s; }
+    .allergen-panel.open .allergen-toggle-arrow { transform:rotate(180deg); color:var(--gold); }
+    .allergen-badge-count {
+      background:var(--exclude-bg); border:1px solid var(--exclude-border);
+      color:var(--exclude-text); font-size:.72rem; font-weight:700;
+      padding:2px 10px; border-radius:20px; margin-left:6px;
+      display:none; letter-spacing:.04em;
     }
-    .section-dot {
-      width: 4px; height: 4px;
-      background: var(--gold);
-      border-radius: 50%;
-      opacity: .6;
-    }
+    .allergen-badge-count.visible { display:inline-block; }
 
-    /* ══════════════════════════════════════
-       PICKER CARDS
-    ══════════════════════════════════════ */
-    .picker-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
-      gap: 20px;
-      margin-bottom: 80px;
-    }
+    .allergen-body { display:none; padding:0 24px 24px; border-top:1px solid var(--divider); }
+    .allergen-panel.open .allergen-body { display:block; }
 
+    .allergen-body-label { font-size:.7rem; color:var(--text3); letter-spacing:.16em; text-transform:uppercase; margin:18px 0 12px; }
+    .allergen-chips { display:flex; flex-wrap:wrap; gap:9px; }
+    .allergen-chip {
+      display:flex; align-items:center; gap:6px;
+      padding:7px 14px; border-radius:30px;
+      border:1px solid var(--border); background:transparent;
+      color:var(--text2); font-size:.8rem; font-family:'Noto Sans KR',sans-serif;
+      font-weight:500; cursor:pointer; letter-spacing:.04em;
+      transition:border-color .18s,background .18s,color .18s;
+      user-select:none;
+    }
+    .allergen-chip:hover { border-color:var(--border-h); color:var(--text1); }
+    .allergen-chip.selected {
+      background:var(--exclude-bg); border-color:var(--exclude-border);
+      color:var(--exclude-text);
+    }
+    .allergen-chip-icon { font-size:1rem; }
+    .allergen-reset {
+      margin-top:16px; padding:8px 20px;
+      border-radius:30px; border:1px solid var(--border);
+      background:transparent; color:var(--text3);
+      font-size:.75rem; font-family:'Noto Sans KR',sans-serif;
+      cursor:pointer; letter-spacing:.06em; transition:border-color .2s,color .2s;
+    }
+    .allergen-reset:hover { border-color:var(--gold); color:var(--gold); }
+
+    /* ── PICKER CARDS ── */
+    .picker-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(255px,1fr)); gap:20px; margin-bottom:80px; }
     .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: var(--shadow), var(--glow);
-      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s, background var(--trans);
-      backdrop-filter: blur(16px);
+      background:var(--surface); border:1px solid var(--border); border-radius:18px;
+      overflow:hidden; box-shadow:var(--shadow),var(--glow);
+      transition:transform .25s,box-shadow .25s,border-color .25s,background var(--trans);
+      backdrop-filter:blur(16px); animation:fadeUp .5s ease both;
     }
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: var(--shadow-h), var(--glow);
-      border-color: var(--border-h);
-    }
-
+    .card:nth-child(1){animation-delay:.05s} .card:nth-child(2){animation-delay:.12s}
+    .card:nth-child(3){animation-delay:.19s} .card:nth-child(4){animation-delay:.26s}
+    .card:hover { transform:translateY(-5px); box-shadow:var(--shadow-h),var(--glow); border-color:var(--border-h); }
     .card-header {
-      padding: 22px 24px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      user-select: none;
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.25s, background 0.25s;
-      background: var(--inset);
+      padding:22px 24px; cursor:pointer; display:flex; align-items:center; gap:16px;
+      user-select:none; border-bottom:1px solid transparent;
+      transition:border-color .25s,background .25s; background:var(--inset);
     }
-    .card.open .card-header { border-color: var(--divider); }
+    .card.open .card-header { border-color:var(--divider); }
+    .card-icon { font-size:2rem; line-height:1; }
+    .card-title { font-family:'Cormorant Garamond',serif; font-size:1.22rem; font-weight:700; letter-spacing:.03em; color:var(--gold); }
+    .card-desc { font-size:.75rem; color:var(--text2); margin-top:2px; letter-spacing:.04em; font-weight:300; }
+    .card-available { font-size:.7rem; color:var(--text3); margin-top:3px; transition:color .2s; }
+    .card-available.low { color:var(--exclude-text); }
+    .card-arrow { margin-left:auto; color:var(--text3); font-size:.7rem; letter-spacing:.1em; transition:transform .3s,color .2s; }
+    .card.open .card-arrow { transform:rotate(180deg); color:var(--gold); }
+    .card-body { display:none; padding:22px 24px 24px; }
+    .card.open .card-body { display:block; }
 
-    .card-icon { font-size: 2rem; line-height: 1; }
-
-    .card-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.22rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      color: var(--gold);
-    }
-    .card-desc { font-size: 0.75rem; color: var(--text2); margin-top: 2px; letter-spacing: 0.04em; font-weight: 300; }
-
-    .card-arrow {
-      margin-left: auto;
-      color: var(--text3);
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      transition: transform 0.3s, color 0.2s;
-    }
-    .card.open .card-arrow { transform: rotate(180deg); color: var(--gold); }
-
-    .card-body { display: none; padding: 22px 24px 24px; }
-    .card.open .card-body { display: block; }
-
-    /* meal display */
     .meal-display {
-      background: var(--inset);
-      border: 1px solid var(--divider);
-      border-radius: 12px;
-      padding: 22px 16px;
-      text-align: center;
-      margin-bottom: 16px;
-      min-height: 130px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: background var(--trans);
+      background:var(--inset); border:1px solid var(--divider); border-radius:12px;
+      padding:22px 16px; text-align:center; margin-bottom:16px; min-height:140px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      transition:background var(--trans);
     }
-    .meal-label {
-      font-size: 0.65rem;
-      color: var(--text3);
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-      font-weight: 500;
-    }
-    .meal-emoji {
-      font-size: 2.4rem;
-      margin-bottom: 6px;
-      opacity: 0;
-      transition: opacity 0.35s 0.08s;
-    }
-    .meal-emoji.show { opacity: 1; }
+    .meal-label { font-size:.65rem; color:var(--text3); letter-spacing:.22em; text-transform:uppercase; margin-bottom:10px; font-weight:500; }
+    .meal-emoji { font-size:2.4rem; margin-bottom:6px; opacity:0; transition:opacity .35s .08s; }
+    .meal-emoji.show { opacity:1; }
+    .meal-name { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:700; color:var(--text1); opacity:0; transform:translateY(6px); transition:opacity .3s,transform .3s,color var(--trans); letter-spacing:.02em; }
+    .meal-name.show { opacity:1; transform:translateY(0); }
+    .meal-benefit { font-size:.78rem; color:var(--text2); margin-top:10px; line-height:1.65; opacity:0; max-height:0; overflow:hidden; transition:opacity .4s .18s,max-height .4s,color var(--trans); padding:0 4px; }
+    .meal-benefit.show { opacity:1; max-height:120px; }
+    .meal-allergens { display:flex; flex-wrap:wrap; gap:5px; justify-content:center; margin-top:10px; opacity:0; max-height:0; overflow:hidden; transition:opacity .4s .22s,max-height .4s; }
+    .meal-allergens.show { opacity:1; max-height:60px; }
+    .allergen-tag { font-size:.65rem; padding:2px 8px; border-radius:20px; background:var(--badge-bg); color:var(--badge-color); border:1px solid var(--exclude-border); }
 
-    .meal-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--text1);
-      opacity: 0;
-      transform: translateY(6px);
-      transition: opacity 0.3s, transform 0.3s, color var(--trans);
-      letter-spacing: 0.02em;
-    }
-    .meal-name.show { opacity: 1; transform: translateY(0); }
-
-    .meal-benefit {
-      font-size: 0.78rem;
-      color: var(--text2);
-      margin-top: 10px;
-      line-height: 1.65;
-      opacity: 0;
-      max-height: 0;
-      overflow: hidden;
-      transition: opacity 0.4s 0.18s, max-height 0.4s, color var(--trans);
-      padding: 0 4px;
-    }
-    .meal-benefit.show { opacity: 1; max-height: 120px; }
-
-    /* pick button */
     .pick-btn {
-      width: 100%;
-      padding: 13px;
-      border-radius: 10px;
-      border: 1px solid var(--gold-dim);
-      background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
-      color: var(--gold-light);
-      font-family: 'Noto Sans KR', sans-serif;
-      font-size: 0.88rem;
-      font-weight: 500;
-      letter-spacing: 0.14em;
-      cursor: pointer;
-      transition: background 0.2s, border-color 0.2s, transform 0.1s, color 0.2s;
+      width:100%; padding:13px; border-radius:10px;
+      border:1px solid var(--gold-dim);
+      background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.05));
+      color:var(--gold-light); font-family:'Noto Sans KR',sans-serif;
+      font-size:.88rem; font-weight:500; letter-spacing:.14em; cursor:pointer;
+      transition:background .2s,border-color .2s,transform .1s,color .2s,opacity .2s;
     }
-    .pick-btn:hover {
-      background: linear-gradient(135deg, rgba(201,168,76,0.28), rgba(201,168,76,0.12));
-      border-color: var(--gold);
-      color: var(--gold-light);
-    }
-    .pick-btn:active { transform: scale(0.98); }
+    .pick-btn:hover { background:linear-gradient(135deg,rgba(201,168,76,.28),rgba(201,168,76,.12)); border-color:var(--gold); }
+    .pick-btn:active { transform:scale(.98); }
+    .pick-btn:disabled { opacity:.35; cursor:not-allowed; }
 
-    /* history */
-    .history { margin-top: 16px; }
-    .history-title {
-      font-size: 0.65rem;
-      color: var(--text3);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-    .history-list { display: flex; flex-wrap: wrap; gap: 6px; }
-    .history-tag {
-      background: var(--chip-bg);
-      color: var(--chip-color);
-      border: 1px solid var(--border);
-      font-size: 0.72rem;
-      padding: 3px 10px;
-      border-radius: 20px;
-      letter-spacing: 0.04em;
-      transition: background var(--trans), color var(--trans), border-color var(--trans);
-    }
+    .history { margin-top:16px; }
+    .history-title { font-size:.65rem; color:var(--text3); letter-spacing:.18em; text-transform:uppercase; margin-bottom:8px; }
+    .history-list { display:flex; flex-wrap:wrap; gap:6px; }
+    .history-tag { background:var(--chip-bg); color:var(--chip-color); border:1px solid var(--border); font-size:.72rem; padding:3px 10px; border-radius:20px; letter-spacing:.04em; transition:background var(--trans),color var(--trans),border-color var(--trans); }
 
-    /* ══════════════════════════════════════
-       ALL FOOD SECTION
-    ══════════════════════════════════════ */
-    .all-section { }
+    /* ── ALL FOOD ── */
+    .filter-tabs { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:28px; }
+    .tab-btn { padding:8px 22px; border-radius:40px; border:1px solid var(--border); background:transparent; color:var(--text2); font-family:'Noto Sans KR',sans-serif; font-size:.8rem; font-weight:500; letter-spacing:.08em; cursor:pointer; transition:border-color .2s,color .2s,background .2s; }
+    .tab-btn:hover { border-color:var(--gold); color:var(--gold); }
+    .tab-btn.active { border-color:var(--gold); background:var(--chip-bg); color:var(--gold); }
 
-    .filter-tabs {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 28px;
-    }
-    .tab-btn {
-      padding: 8px 22px;
-      border-radius: 40px;
-      border: 1px solid var(--border);
-      background: transparent;
-      color: var(--text2);
-      font-family: 'Noto Sans KR', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      cursor: pointer;
-      transition: border-color 0.2s, color 0.2s, background 0.2s;
-    }
-    .tab-btn:hover { border-color: var(--gold); color: var(--gold); }
-    .tab-btn.active {
-      border-color: var(--gold);
-      background: var(--chip-bg);
-      color: var(--gold);
-    }
-
-    .all-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-      gap: 14px;
-    }
+    .all-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:14px; }
 
     .food-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px 16px;
-      cursor: pointer;
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s, background var(--trans);
-      backdrop-filter: blur(12px);
+      background:var(--surface); border:1px solid var(--border); border-radius:14px;
+      padding:16px; cursor:pointer;
+      transition:transform .2s,border-color .2s,box-shadow .2s,background var(--trans),opacity .3s;
+      backdrop-filter:blur(12px);
     }
-    .food-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--border-h);
-      box-shadow: var(--shadow-h);
-    }
+    .food-card:hover { transform:translateY(-3px); border-color:var(--border-h); box-shadow:var(--shadow-h); }
+    .food-card.excluded { opacity:.35; filter:grayscale(.6); pointer-events:none; }
+    .food-card[data-cat="breakfast"] { border-top:2px solid rgba(255,160,80,.4); }
+    .food-card[data-cat="lunch"]     { border-top:2px solid rgba(80,180,255,.4); }
+    .food-card[data-cat="dinner"]    { border-top:2px solid rgba(160,86,255,.4); }
+    .food-card[data-cat="dessert"]   { border-top:2px solid rgba(255,110,180,.4); }
 
-    .food-card-top {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .food-card-emoji { font-size: 1.9rem; line-height: 1; flex-shrink: 0; }
+    .food-card-top { display:flex; align-items:center; gap:12px; }
+    .food-card-emoji { font-size:1.9rem; line-height:1; flex-shrink:0; }
+    .food-card-name { font-family:'Cormorant Garamond',serif; font-size:1.08rem; font-weight:700; color:var(--text1); letter-spacing:.02em; transition:color var(--trans); }
+    .food-card-cat { display:inline-block; font-size:.65rem; font-weight:500; letter-spacing:.1em; padding:2px 9px; border-radius:20px; margin-top:4px; background:var(--chip-bg); color:var(--chip-color); border:1px solid var(--border); transition:background var(--trans),color var(--trans); }
+    .food-card-allergen-list { display:flex; flex-wrap:wrap; gap:4px; margin-top:8px; }
+    .food-allergen-tag { font-size:.62rem; padding:1px 7px; border-radius:10px; background:var(--badge-bg); color:var(--badge-color); border:1px solid var(--exclude-border); }
+    .food-card-benefit { display:none; font-size:.76rem; color:var(--text2); line-height:1.7; margin-top:12px; padding-top:12px; border-top:1px solid var(--divider); transition:color var(--trans); }
+    .food-card.expanded .food-card-benefit { display:block; }
 
-    .food-card-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.08rem;
-      font-weight: 700;
-      color: var(--text1);
-      letter-spacing: 0.02em;
-      transition: color var(--trans);
-    }
-    .food-card-cat {
-      display: inline-block;
-      font-size: 0.65rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      padding: 2px 9px;
-      border-radius: 20px;
-      margin-top: 4px;
-      background: var(--chip-bg);
-      color: var(--chip-color);
-      border: 1px solid var(--border);
-      transition: background var(--trans), color var(--trans);
-    }
+    /* ── FOOTER ── */
+    footer { margin-top:80px; text-align:center; }
+    .footer-ornament { display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:16px; opacity:.35; }
+    .footer-ornament .ornament-line { max-width:80px; }
+    .footer-text { font-size:.72rem; color:var(--text3); letter-spacing:.14em; text-transform:uppercase; }
 
-    .food-card-benefit {
-      display: none;
-      font-size: 0.76rem;
-      color: var(--text2);
-      line-height: 1.7;
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid var(--divider);
-      transition: color var(--trans);
+    @media(max-width:640px){
+      .page{padding:40px 16px 60px} header{margin-bottom:48px}
+      .theme-toggle{position:static;margin:0 auto 28px;display:inline-flex}
+      header{display:flex;flex-direction:column;align-items:center}
+      .picker-grid{grid-template-columns:1fr}
+      .all-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+      .allergen-chips{gap:7px}
+      .allergen-chip{font-size:.75rem;padding:6px 11px}
     }
-    .food-card.expanded .food-card-benefit { display: block; }
-
-    /* accent bar by category */
-    .food-card[data-cat="breakfast"] { border-top: 2px solid rgba(255,160,80,0.4); }
-    .food-card[data-cat="lunch"]     { border-top: 2px solid rgba(80,180,255,0.4); }
-    .food-card[data-cat="dinner"]    { border-top: 2px solid rgba(160,86,255,0.4); }
-    .food-card[data-cat="dessert"]   { border-top: 2px solid rgba(255,110,180,0.4); }
-
-    /* ══════════════════════════════════════
-       FOOTER
-    ══════════════════════════════════════ */
-    footer {
-      margin-top: 80px;
-      text-align: center;
-    }
-    .footer-ornament {
-      display: flex; align-items: center; justify-content: center; gap: 16px;
-      margin-bottom: 16px; opacity: .35;
-    }
-    .footer-ornament .ornament-line { max-width: 80px; }
-    .footer-text { font-size: 0.72rem; color: var(--text3); letter-spacing: 0.14em; text-transform: uppercase; }
-
-    /* ══════════════════════════════════════
-       RESPONSIVE
-    ══════════════════════════════════════ */
-    @media (max-width: 640px) {
-      .page { padding: 40px 16px 60px; }
-      header { margin-bottom: 48px; }
-      .theme-toggle { position: static; margin: 0 auto 28px; display: inline-flex; }
-      header { display: flex; flex-direction: column; align-items: center; }
-      .picker-grid { grid-template-columns: 1fr; }
-      .all-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-      .site-title { font-size: 2rem; }
-    }
-
-    /* ══════════════════════════════════════
-       ANIMATION
-    ══════════════════════════════════════ */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .card { animation: fadeUp 0.5s ease both; }
-    .card:nth-child(1) { animation-delay: 0.05s; }
-    .card:nth-child(2) { animation-delay: 0.12s; }
-    .card:nth-child(3) { animation-delay: 0.19s; }
-    .card:nth-child(4) { animation-delay: 0.26s; }
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
   </style>
 </head>
 <body>
-
 <div class="page">
 
-  <!-- HEADER -->
   <header>
-    <button class="theme-toggle" id="themeToggle" aria-label="테마 전환">
+    <button class="theme-toggle" id="themeToggle">
       <svg id="themeIcon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
       <span id="themeLabel">라이트 모드</span>
     </button>
-
     <div class="header-ornament">
-      <div class="ornament-line"></div>
-      <div class="ornament-diamond"></div>
-      <div class="ornament-line right"></div>
+      <div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line right"></div>
     </div>
-
     <h1 class="site-title">오늘 <span>뭐 먹지</span>?</h1>
     <p class="site-sub">카테고리를 선택하고 랜덤 메뉴를 추천받으세요</p>
   </header>
+
+  <!-- ALLERGEN FILTER -->
+  <div class="section-header">
+    <div class="section-dot"></div>
+    <div class="section-label">Allergen Filter</div>
+    <div class="section-header-line"></div>
+  </div>
+  <div class="allergen-panel" id="allergenPanel">
+    <button class="allergen-toggle" id="allergenToggle">
+      <span class="allergen-toggle-icon">⚠️</span>
+      <span class="allergen-toggle-text">알레르기 성분 설정</span>
+      <span class="allergen-toggle-sub">— 해당 성분 포함 메뉴를 자동으로 제외합니다</span>
+      <span class="allergen-badge-count" id="allergenCount"></span>
+      <span class="allergen-toggle-arrow">▼</span>
+    </button>
+    <div class="allergen-body" id="allergenBody">
+      <div class="allergen-body-label">알레르기 유발 성분 선택</div>
+      <div class="allergen-chips" id="allergenChips"></div>
+      <button class="allergen-reset" id="allergenReset">✕ 선택 초기화</button>
+    </div>
+  </div>
 
   <!-- PICKER -->
   <div class="section-header">
@@ -525,205 +299,284 @@
     <div class="section-label">전체 메뉴</div>
     <div class="section-header-line"></div>
   </div>
-  <div class="all-section">
-    <div class="filter-tabs" id="filterTabs">
-      <button class="tab-btn active" data-filter="all">전체</button>
-      <button class="tab-btn" data-filter="breakfast">아침식사</button>
-      <button class="tab-btn" data-filter="lunch">점심식사</button>
-      <button class="tab-btn" data-filter="dinner">저녁식사</button>
-      <button class="tab-btn" data-filter="dessert">디저트</button>
-    </div>
-    <div class="all-grid" id="allGrid"></div>
+  <div class="filter-tabs" id="filterTabs">
+    <button class="tab-btn active" data-filter="all">전체</button>
+    <button class="tab-btn" data-filter="breakfast">아침식사</button>
+    <button class="tab-btn" data-filter="lunch">점심식사</button>
+    <button class="tab-btn" data-filter="dinner">저녁식사</button>
+    <button class="tab-btn" data-filter="dessert">디저트</button>
   </div>
+  <div class="all-grid" id="allGrid"></div>
 
-  <!-- FOOTER -->
   <footer>
     <div class="footer-ornament">
-      <div class="ornament-line"></div>
-      <div class="ornament-diamond"></div>
-      <div class="ornament-line right"></div>
+      <div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line right"></div>
     </div>
     <p class="footer-text">카드를 클릭하면 건강 장점을 확인할 수 있습니다</p>
   </footer>
-
 </div>
 
 <script>
+/* ══════════════════════════════════════
+   ALLERGEN DEFINITIONS
+══════════════════════════════════════ */
+const ALLERGENS = [
+  { id:'egg',       label:'난류',     icon:'🥚' },
+  { id:'dairy',     label:'우유·유제품', icon:'🥛' },
+  { id:'wheat',     label:'밀·글루텐', icon:'🌾' },
+  { id:'soy',       label:'대두',     icon:'🫘' },
+  { id:'peanut',    label:'땅콩',     icon:'🥜' },
+  { id:'nut',       label:'견과류',   icon:'🌰' },
+  { id:'shrimp',    label:'새우',     icon:'🦐' },
+  { id:'crab',      label:'게',       icon:'🦀' },
+  { id:'squid',     label:'오징어·낙지', icon:'🦑' },
+  { id:'fish',      label:'생선',     icon:'🐟' },
+  { id:'pork',      label:'돼지고기', icon:'🐷' },
+  { id:'beef',      label:'쇠고기',   icon:'🐄' },
+  { id:'chicken',   label:'닭고기',   icon:'🐔' },
+  { id:'shellfish', label:'조개류·전복', icon:'🐚' },
+  { id:'buckwheat', label:'메밀',     icon:'🌿' },
+];
+
+/* ══════════════════════════════════════
+   FOOD DATA  (allergens: string[])
+══════════════════════════════════════ */
 const categories = [
   {
-    id: 'breakfast', title: '아침식사', icon: '🌅', desc: '하루를 활기차게 시작해요',
-    items: [
-      { name: '토스트',          emoji: '🍞', benefit: '소화가 빠르고 탄수화물로 아침 에너지를 빠르게 공급해요. 버터나 잼을 곁들이면 맛과 열량을 조절할 수 있어요.' },
-      { name: '계란프라이',      emoji: '🍳', benefit: '완전단백질 공급원으로 포만감이 높아요. 콜린이 풍부해 뇌 기능과 집중력 향상에 도움을 줍니다.' },
-      { name: '오트밀',          emoji: '🥣', benefit: '베타글루칸 식이섬유가 콜레스테롤을 낮추고 혈당 상승을 완만하게 해줘요. 오랫동안 포만감이 유지됩니다.' },
-      { name: '팬케이크',        emoji: '🥞', benefit: '탄수화물과 달걀 단백질이 균형 있게 들어있어요. 꿀이나 과일을 얹으면 비타민도 함께 섭취할 수 있어요.' },
-      { name: '시리얼',          emoji: '🥛', benefit: '철분·비타민·미네랄이 강화된 제품이 많아 영양 보충이 간편해요. 우유와 함께 먹으면 칼슘까지 챙길 수 있어요.' },
-      { name: '죽',              emoji: '🍲', benefit: '소화 부담이 적고 위장을 편안하게 해줘요. 몸이 피곤하거나 속이 불편할 때 최고의 선택입니다.' },
-      { name: '샌드위치',        emoji: '🥪', benefit: '채소·단백질·탄수화물을 한 번에 섭취할 수 있어 영양 균형이 뛰어나요. 휴대가 간편해 바쁜 아침에 딱 맞아요.' },
-      { name: '베이글',          emoji: '🥯', benefit: '일반 빵보다 밀도가 높아 포만감이 오래 유지돼요. 크림치즈나 훈제연어를 곁들이면 단백질도 보충할 수 있어요.' },
-      { name: '요거트',          emoji: '🫙', benefit: '유산균이 장 건강을 개선하고 면역력을 높여줘요. 칼슘이 풍부해 뼈 건강에도 매우 좋아요.' },
-      { name: '김치볶음밥',      emoji: '🍚', benefit: '김치의 유산균과 캡사이신이 소화를 돕고 신진대사를 활성화해요. 단백질 재료를 추가하면 완벽한 한 끼가 됩니다.' },
-      { name: '스크램블에그',    emoji: '🍳', benefit: '계란의 필수아미노산이 근육 합성을 돕고, 루테인이 눈 건강을 보호해요. 빠르게 만들 수 있어 아침에 편리해요.' },
-      { name: '과일샐러드',      emoji: '🍓', benefit: '다양한 비타민과 항산화 물질을 한꺼번에 섭취할 수 있어요. 칼로리가 낮고 수분 공급에도 탁월합니다.' },
-      { name: '프렌치토스트',    emoji: '🍞', benefit: '계란과 우유를 흡수한 빵으로 단백질과 칼슘을 동시에 보충해요. 달콤하면서도 영양 밀도가 높아요.' },
-      { name: '그래놀라',        emoji: '🥣', benefit: '귀리·견과류·건과일이 어우러져 식이섬유와 건강한 지방을 공급해요. 아삭한 식감이 식욕을 자극합니다.' },
-      { name: '아보카도 토스트', emoji: '🥑', benefit: '불포화지방산이 풍부해 혈관 건강에 좋아요. 칼륨이 많아 혈압 조절에도 도움을 줍니다.' },
-      { name: '미역국',          emoji: '🥣', benefit: '요오드와 칼슘이 풍부해 갑상선 기능과 뼈 건강을 도와요. 식이섬유가 변비 예방에도 효과적입니다.' },
-      { name: '떡국',            emoji: '🍲', benefit: '소화가 쉬운 떡과 깊은 육수가 위장을 편안하게 해줘요. 콜라겐 성분이 피부 탄력 유지에도 도움을 줍니다.' },
-      { name: '바나나',          emoji: '🍌', benefit: '빠르게 흡수되는 천연당과 칼륨이 풍부해 운동 전 에너지 보충에 최적이에요. 세로토닌 전구체로 기분도 높여줍니다.' },
-      { name: '크루아상',        emoji: '🥐', benefit: '버터의 지방이 포만감을 유지시키고 탄수화물이 빠른 에너지를 공급해요. 따뜻하게 먹으면 풍미가 배가됩니다.' },
-      { name: '잉글리시 머핀',   emoji: '🫓', benefit: '일반 빵보다 칼로리가 낮고 식이섬유가 풍부해요. 반으로 갈라 다양한 토핑을 얹어 영양을 자유롭게 조절할 수 있어요.' },
-      { name: '달걀찜',          emoji: '🥚', benefit: '부드러운 식감으로 소화 부담이 없고 단백질이 풍부해요. 뚝배기 달걀찜은 따뜻하게 속을 채워줘 위장 건강에 좋습니다.' },
-      { name: '전복죽',          emoji: '🐚', benefit: '전복의 아르기닌이 면역 기능을 강화하고 간 해독을 도와요. 기력 회복에 탁월하며 소화 부담이 거의 없어요.' },
-      { name: '콘수프',          emoji: '🌽', benefit: '옥수수의 루테인·제아잔틴이 눈 건강을 보호해요. 식이섬유가 풍부해 장 운동을 촉진하고 포만감도 좋습니다.' },
-      { name: '두유',            emoji: '🥛', benefit: '식물성 단백질과 이소플라본이 풍부해 혈중 콜레스테롤 개선에 효과적이에요. 유당불내증이 있어도 편하게 마실 수 있어요.' },
-      { name: '닭죽',            emoji: '🍚', benefit: '닭고기의 단백질이 근육 회복을 돕고 소화가 매우 잘 돼요. 몸이 약하거나 회복 중일 때 최고의 아침 보양식입니다.' },
-      { name: '치즈 오믈렛',     emoji: '🧀', benefit: '달걀의 단백질과 치즈의 칼슘이 결합해 영양 밀도가 높아요. 단백질이 풍부해 근육 유지와 포만감 지속에 탁월합니다.' },
-      { name: '녹두죽',          emoji: '🍵', benefit: '녹두의 해독 성분이 체내 독소를 제거해요. 열을 내리는 효능이 있어 더운 여름이나 몸에 열이 많을 때 특히 좋습니다.' },
-      { name: '블루베리 스무디', emoji: '🫐', benefit: '안토시아닌이 뇌 기능과 기억력 향상에 도움을 줘요. 항산화 성분이 풍부해 노화를 늦추고 면역력을 높여줍니다.' },
-      { name: '에그 베네딕트',   emoji: '🍳', benefit: '수란의 단백질과 홀란다이즈 소스의 비타민이 균형 있게 담겼어요. 에너지 밀도가 높아 활동이 많은 날 아침에 적합합니다.' },
+    id:'breakfast', title:'아침식사', icon:'🌅', desc:'하루를 활기차게 시작해요',
+    items:[
+      { name:'토스트',          emoji:'🍞', allergens:['wheat'],                benefit:'소화가 빠르고 탄수화물로 아침 에너지를 빠르게 공급해요. 버터나 잼을 곁들이면 맛과 열량을 조절할 수 있어요.' },
+      { name:'계란프라이',      emoji:'🍳', allergens:['egg'],                  benefit:'완전단백질 공급원으로 포만감이 높아요. 콜린이 풍부해 뇌 기능과 집중력 향상에 도움을 줍니다.' },
+      { name:'오트밀',          emoji:'🥣', allergens:['wheat','dairy'],        benefit:'베타글루칸 식이섬유가 콜레스테롤을 낮추고 혈당 상승을 완만하게 해줘요. 오랫동안 포만감이 유지됩니다.' },
+      { name:'팬케이크',        emoji:'🥞', allergens:['wheat','egg','dairy'],  benefit:'탄수화물과 달걀 단백질이 균형 있게 들어있어요. 꿀이나 과일을 얹으면 비타민도 함께 섭취할 수 있어요.' },
+      { name:'시리얼',          emoji:'🥛', allergens:['wheat','dairy'],        benefit:'철분·비타민·미네랄이 강화된 제품이 많아 영양 보충이 간편해요. 우유와 함께 먹으면 칼슘까지 챙길 수 있어요.' },
+      { name:'죽',              emoji:'🍲', allergens:[],                       benefit:'소화 부담이 적고 위장을 편안하게 해줘요. 몸이 피곤하거나 속이 불편할 때 최고의 선택입니다.' },
+      { name:'샌드위치',        emoji:'🥪', allergens:['wheat','egg','dairy'],  benefit:'채소·단백질·탄수화물을 한 번에 섭취할 수 있어 영양 균형이 뛰어나요. 휴대가 간편해 바쁜 아침에 딱 맞아요.' },
+      { name:'베이글',          emoji:'🥯', allergens:['wheat','egg'],          benefit:'일반 빵보다 밀도가 높아 포만감이 오래 유지돼요. 크림치즈나 훈제연어를 곁들이면 단백질도 보충할 수 있어요.' },
+      { name:'요거트',          emoji:'🫙', allergens:['dairy'],                benefit:'유산균이 장 건강을 개선하고 면역력을 높여줘요. 칼슘이 풍부해 뼈 건강에도 매우 좋아요.' },
+      { name:'김치볶음밥',      emoji:'🍚', allergens:['egg','soy'],            benefit:'김치의 유산균과 캡사이신이 소화를 돕고 신진대사를 활성화해요. 단백질 재료를 추가하면 완벽한 한 끼가 됩니다.' },
+      { name:'스크램블에그',    emoji:'🍳', allergens:['egg','dairy'],          benefit:'계란의 필수아미노산이 근육 합성을 돕고, 루테인이 눈 건강을 보호해요. 빠르게 만들 수 있어 아침에 편리해요.' },
+      { name:'과일샐러드',      emoji:'🍓', allergens:[],                       benefit:'다양한 비타민과 항산화 물질을 한꺼번에 섭취할 수 있어요. 칼로리가 낮고 수분 공급에도 탁월합니다.' },
+      { name:'프렌치토스트',    emoji:'🍞', allergens:['wheat','egg','dairy'],  benefit:'계란과 우유를 흡수한 빵으로 단백질과 칼슘을 동시에 보충해요. 달콤하면서도 영양 밀도가 높아요.' },
+      { name:'그래놀라',        emoji:'🥣', allergens:['wheat','nut'],          benefit:'귀리·견과류·건과일이 어우러져 식이섬유와 건강한 지방을 공급해요. 아삭한 식감이 식욕을 자극합니다.' },
+      { name:'아보카도 토스트', emoji:'🥑', allergens:['wheat'],                benefit:'불포화지방산이 풍부해 혈관 건강에 좋아요. 칼륨이 많아 혈압 조절에도 도움을 줍니다.' },
+      { name:'미역국',          emoji:'🥣', allergens:['soy'],                  benefit:'요오드와 칼슘이 풍부해 갑상선 기능과 뼈 건강을 도와요. 식이섬유가 변비 예방에도 효과적입니다.' },
+      { name:'떡국',            emoji:'🍲', allergens:['soy'],                  benefit:'소화가 쉬운 떡과 깊은 육수가 위장을 편안하게 해줘요. 콜라겐 성분이 피부 탄력 유지에도 도움을 줍니다.' },
+      { name:'바나나',          emoji:'🍌', allergens:[],                       benefit:'빠르게 흡수되는 천연당과 칼륨이 풍부해 운동 전 에너지 보충에 최적이에요. 세로토닌 전구체로 기분도 높여줍니다.' },
+      { name:'크루아상',        emoji:'🥐', allergens:['wheat','dairy','egg'],  benefit:'버터의 지방이 포만감을 유지시키고 탄수화물이 빠른 에너지를 공급해요. 따뜻하게 먹으면 풍미가 배가됩니다.' },
+      { name:'잉글리시 머핀',   emoji:'🫓', allergens:['wheat','egg','dairy'],  benefit:'일반 빵보다 칼로리가 낮고 식이섬유가 풍부해요. 반으로 갈라 다양한 토핑을 얹어 영양을 자유롭게 조절할 수 있어요.' },
+      { name:'달걀찜',          emoji:'🥚', allergens:['egg'],                  benefit:'부드러운 식감으로 소화 부담이 없고 단백질이 풍부해요. 뚝배기 달걀찜은 따뜻하게 속을 채워줘 위장 건강에 좋습니다.' },
+      { name:'전복죽',          emoji:'🐚', allergens:['shellfish'],            benefit:'전복의 아르기닌이 면역 기능을 강화하고 간 해독을 도와요. 기력 회복에 탁월하며 소화 부담이 거의 없어요.' },
+      { name:'콘수프',          emoji:'🌽', allergens:['dairy','wheat'],        benefit:'옥수수의 루테인·제아잔틴이 눈 건강을 보호해요. 식이섬유가 풍부해 장 운동을 촉진하고 포만감도 좋습니다.' },
+      { name:'두유',            emoji:'🥛', allergens:['soy'],                  benefit:'식물성 단백질과 이소플라본이 풍부해 혈중 콜레스테롤 개선에 효과적이에요. 유당불내증이 있어도 편하게 마실 수 있어요.' },
+      { name:'닭죽',            emoji:'🍚', allergens:['chicken','soy'],        benefit:'닭고기의 단백질이 근육 회복을 돕고 소화가 매우 잘 돼요. 몸이 약하거나 회복 중일 때 최고의 아침 보양식입니다.' },
+      { name:'치즈 오믈렛',     emoji:'🧀', allergens:['egg','dairy'],          benefit:'달걀의 단백질과 치즈의 칼슘이 결합해 영양 밀도가 높아요. 단백질이 풍부해 근육 유지와 포만감 지속에 탁월합니다.' },
+      { name:'녹두죽',          emoji:'🍵', allergens:[],                       benefit:'녹두의 해독 성분이 체내 독소를 제거해요. 열을 내리는 효능이 있어 더운 여름이나 몸에 열이 많을 때 특히 좋습니다.' },
+      { name:'블루베리 스무디', emoji:'🫐', allergens:['dairy'],                benefit:'안토시아닌이 뇌 기능과 기억력 향상에 도움을 줘요. 항산화 성분이 풍부해 노화를 늦추고 면역력을 높여줍니다.' },
+      { name:'에그 베네딕트',   emoji:'🍳', allergens:['wheat','egg','dairy'],  benefit:'수란의 단백질과 홀란다이즈 소스의 비타민이 균형 있게 담겼어요. 에너지 밀도가 높아 활동이 많은 날 아침에 적합합니다.' },
+      { name:'그릭 요거트 볼',  emoji:'🫙', allergens:['dairy','nut'],          benefit:'고단백 그릭 요거트에 견과류와 과일을 더해 포만감과 영양을 동시에 챙겨요. 프로바이오틱스로 장 건강도 개선됩니다.' },
     ]
   },
   {
-    id: 'lunch', title: '점심식사', icon: '☀️', desc: '에너지 충전 타임!',
-    items: [
-      { name: '비빔밥',     emoji: '🥗', benefit: '다양한 나물의 식이섬유와 비빔 양념의 고추장이 면역력을 높여줘요. 여러 채소로 비타민·미네랄을 골고루 섭취할 수 있어요.' },
-      { name: '냉면',       emoji: '🍜', benefit: '메밀 면의 루틴 성분이 혈관을 강화하고 콜레스테롤을 낮춰줘요. 저칼로리라 다이어트 중에도 부담 없이 즐길 수 있어요.' },
-      { name: '짜장면',     emoji: '🍝', benefit: '춘장의 된장 발효 성분이 소화를 돕고, 양파와 채소가 풍부해 항산화 효과가 있어요. 포만감이 높아 오후 활동에 활력을 줍니다.' },
-      { name: '짬뽕',       emoji: '🍜', benefit: '각종 해산물로 아연·철분·오메가3를 섭취할 수 있어요. 매운 국물이 신진대사를 촉진하고 몸을 따뜻하게 해줍니다.' },
-      { name: '김치찌개',   emoji: '🍲', benefit: '발효 김치의 유산균이 장 건강을 개선해요. 돼지고기와 함께 먹으면 비타민B1 흡수가 높아져 피로 회복에 탁월합니다.' },
-      { name: '된장찌개',   emoji: '🍲', benefit: '된장의 이소플라본이 항암 효과가 있고 단백질이 풍부해요. 다양한 채소와 함께 끓이면 미네랄 보충도 됩니다.' },
-      { name: '순두부찌개', emoji: '🍲', benefit: '부드러운 두부로 소화 부담 없이 단백질을 섭취할 수 있어요. 칼슘과 철분이 풍부해 뼈와 혈액 건강에 좋습니다.' },
-      { name: '갈비탕',     emoji: '🥣', benefit: '콜라겐이 풍부한 국물이 피부 탄력과 관절 건강을 도와요. 고단백 음식으로 근력 유지와 회복에 효과적입니다.' },
-      { name: '설렁탕',     emoji: '🥣', benefit: '사골에서 우러난 칼슘이 뼈 건강을 강화해요. 담백하고 소화가 잘 돼 몸이 허약할 때도 부담 없이 먹을 수 있어요.' },
-      { name: '볶음밥',     emoji: '🍚', benefit: '달걀·채소를 곁들이면 단백질과 비타민을 동시에 섭취할 수 있어요. 냉장고 재료를 활용해 음식물 낭비를 줄이는 데도 좋아요.' },
-      { name: '제육볶음',   emoji: '🥩', benefit: '돼지고기의 비타민B1이 탄수화물 대사를 도와 피로를 풀어줘요. 고추장의 캡사이신이 지방 연소를 촉진합니다.' },
-      { name: '칼국수',     emoji: '🍜', benefit: '따뜻한 국물이 체온을 높이고 소화를 도와요. 손으로 반죽한 면은 쫄깃한 식감이 포만감을 오래 유지시켜 줍니다.' },
-      { name: '라면',       emoji: '🍜', benefit: '빠르게 에너지를 보충할 수 있어요. 계란·채소를 추가하면 영양 균형을 맞출 수 있고, 추운 날 몸을 빠르게 데워줍니다.' },
-      { name: '돈까스',     emoji: '🍱', benefit: '풍부한 단백질로 포만감이 높아 오후 활동에 지치지 않아요. 튀김옷의 바삭한 식감이 식욕을 돋워줍니다.' },
-      { name: '불고기',     emoji: '🥩', benefit: '달콤한 양념에 재운 소고기로 철분과 아연을 보충해요. 배즙의 단백질 분해 효소가 소화를 도와줍니다.' },
-      { name: '쌀국수',     emoji: '🍜', benefit: '글루텐이 없어 소화가 잘 되고 위장에 부담이 적어요. 다양한 허브와 채소를 곁들여 비타민을 함께 섭취할 수 있어요.' },
-      { name: '국밥',       emoji: '🥣', benefit: '뜨거운 국물이 체온 유지와 혈액순환을 도와요. 단백질과 미네랄이 풍부해 기력 회복에 특히 효과적입니다.' },
-      { name: '연어덮밥',   emoji: '🐟', benefit: '오메가3 지방산이 심혈관 건강과 뇌 기능 향상에 탁월해요. DHA가 풍부해 집중력이 필요한 오후 업무 전에 좋습니다.' },
-      { name: '쌈밥',       emoji: '🥬', benefit: '다양한 잎채소로 식이섬유와 엽산을 풍부하게 섭취해요. 쌈 채소가 혈당 상승을 늦춰 식후 혈당 관리에 도움을 줍니다.' },
-      { name: '초밥',       emoji: '🍣', benefit: '생선의 고단백·저지방 영양소와 오메가3를 균형 있게 섭취해요. 와사비의 항균 성분이 식중독 예방에도 도움을 줍니다.' },
-      { name: '쭈꾸미볶음',  emoji: '🐙', benefit: '타우린이 풍부해 간 해독과 피로 회복에 탁월해요. 고단백 저지방으로 다이어트 중에도 부담 없이 즐길 수 있어요.' },
-      { name: '낙지볶음',    emoji: '🐙', benefit: '낙지의 타우린과 철분이 빈혈 예방과 혈액 건강에 좋아요. 매콤한 양념이 식욕을 돋우고 신진대사 촉진에 효과적입니다.' },
-      { name: '두부조림',    emoji: '🫕', benefit: '대두 단백질이 근육 유지와 콜레스테롤 개선에 도움을 줘요. 칼슘·마그네슘이 풍부해 뼈 건강에도 탁월합니다.' },
-      { name: '청국장',      emoji: '🍲', benefit: '강력한 유산균이 장 건강을 개선하고 면역력을 높여줘요. 낫토키나아제가 혈전을 예방하고 혈액 순환을 도와줍니다.' },
-      { name: '닭볶음탕',    emoji: '🍗', benefit: '닭고기 단백질과 감자의 칼륨이 근육·혈압 건강을 동시에 챙겨줘요. 얼큰한 국물이 체온을 높이고 기력 회복에 좋습니다.' },
-      { name: '곰탕',        emoji: '🥣', benefit: '콜라겐과 젤라틴이 관절 건강과 피부 탄력을 개선해요. 위장에 부담이 없고 영양이 풍부해 회복식으로 최적입니다.' },
-      { name: '훈제오리',    emoji: '🦆', benefit: '불포화지방산이 풍부해 혈관을 청소하고 심장 건강에 좋아요. 철분·비타민B군이 풍부해 에너지 대사를 촉진합니다.' },
-      { name: '회덮밥',      emoji: '🐟', benefit: '신선한 생선의 오메가3와 채소의 비타민이 어우러져 영양 균형이 뛰어나요. 저칼로리로 가볍고 상큼하게 먹을 수 있습니다.' },
-      { name: '솥밥',        emoji: '🍚', benefit: '솥 바닥의 누룽지가 소화를 돕고 고소한 맛을 더해줘요. 다양한 재료를 넣어 균형 잡힌 영양 섭취가 가능합니다.' },
-      { name: '오징어볶음',  emoji: '🦑', benefit: '오징어의 타우린이 눈의 피로를 줄이고 간 기능을 보호해요. 고단백 저지방으로 건강한 점심 메뉴로 손색없습니다.' },
-      { name: '묵밥',        emoji: '🥣', benefit: '도토리묵의 아콘산이 체내 중금속 배출을 도와요. 칼로리가 낮고 수분이 풍부해 다이어트 중 포만감을 주는 훌륭한 선택입니다.' },
+    id:'lunch', title:'점심식사', icon:'☀️', desc:'에너지 충전 타임!',
+    items:[
+      { name:'비빔밥',     emoji:'🥗', allergens:['egg','soy'],              benefit:'다양한 나물의 식이섬유와 비빔 양념의 고추장이 면역력을 높여줘요. 여러 채소로 비타민·미네랄을 골고루 섭취할 수 있어요.' },
+      { name:'냉면',       emoji:'🍜', allergens:['buckwheat','soy'],        benefit:'메밀 면의 루틴 성분이 혈관을 강화하고 콜레스테롤을 낮춰줘요. 저칼로리라 다이어트 중에도 부담 없이 즐길 수 있어요.' },
+      { name:'짜장면',     emoji:'🍝', allergens:['wheat','soy'],            benefit:'춘장의 된장 발효 성분이 소화를 돕고, 양파와 채소가 풍부해 항산화 효과가 있어요.' },
+      { name:'짬뽕',       emoji:'🍜', allergens:['wheat','shrimp','squid','shellfish'], benefit:'각종 해산물로 아연·철분·오메가3를 섭취할 수 있어요. 매운 국물이 신진대사를 촉진하고 몸을 따뜻하게 해줍니다.' },
+      { name:'김치찌개',   emoji:'🍲', allergens:['soy','pork'],            benefit:'발효 김치의 유산균이 장 건강을 개선해요. 돼지고기와 함께 먹으면 비타민B1 흡수가 높아져 피로 회복에 탁월합니다.' },
+      { name:'된장찌개',   emoji:'🍲', allergens:['soy'],                   benefit:'된장의 이소플라본이 항암 효과가 있고 단백질이 풍부해요. 다양한 채소와 함께 끓이면 미네랄 보충도 됩니다.' },
+      { name:'순두부찌개', emoji:'🍲', allergens:['soy','egg'],             benefit:'부드러운 두부로 소화 부담 없이 단백질을 섭취할 수 있어요. 칼슘과 철분이 풍부해 뼈와 혈액 건강에 좋습니다.' },
+      { name:'갈비탕',     emoji:'🥣', allergens:['beef','soy'],            benefit:'콜라겐이 풍부한 국물이 피부 탄력과 관절 건강을 도와요. 고단백 음식으로 근력 유지와 회복에 효과적입니다.' },
+      { name:'설렁탕',     emoji:'🥣', allergens:['beef','soy'],            benefit:'사골에서 우러난 칼슘이 뼈 건강을 강화해요. 담백하고 소화가 잘 돼 몸이 허약할 때도 부담 없이 먹을 수 있어요.' },
+      { name:'볶음밥',     emoji:'🍚', allergens:['egg','soy'],             benefit:'달걀·채소를 곁들이면 단백질과 비타민을 동시에 섭취할 수 있어요.' },
+      { name:'제육볶음',   emoji:'🥩', allergens:['pork','soy'],            benefit:'돼지고기의 비타민B1이 탄수화물 대사를 도와 피로를 풀어줘요. 고추장의 캡사이신이 지방 연소를 촉진합니다.' },
+      { name:'칼국수',     emoji:'🍜', allergens:['wheat','soy'],           benefit:'따뜻한 국물이 체온을 높이고 소화를 도와요.' },
+      { name:'라면',       emoji:'🍜', allergens:['wheat','soy','egg'],     benefit:'빠르게 에너지를 보충할 수 있어요. 계란·채소를 추가하면 영양 균형을 맞출 수 있고, 추운 날 몸을 빠르게 데워줍니다.' },
+      { name:'돈까스',     emoji:'🍱', allergens:['wheat','egg','pork'],    benefit:'풍부한 단백질로 포만감이 높아 오후 활동에 지치지 않아요.' },
+      { name:'불고기',     emoji:'🥩', allergens:['beef','soy'],            benefit:'달콤한 양념에 재운 소고기로 철분과 아연을 보충해요. 배즙의 단백질 분해 효소가 소화를 도와줍니다.' },
+      { name:'쌀국수',     emoji:'🍜', allergens:['fish'],                  benefit:'글루텐이 없어 소화가 잘 되고 위장에 부담이 적어요. 다양한 허브와 채소를 곁들여 비타민을 함께 섭취할 수 있어요.' },
+      { name:'국밥',       emoji:'🥣', allergens:['pork','soy'],            benefit:'뜨거운 국물이 체온 유지와 혈액순환을 도와요.' },
+      { name:'연어덮밥',   emoji:'🐟', allergens:['fish','soy'],            benefit:'오메가3 지방산이 심혈관 건강과 뇌 기능 향상에 탁월해요.' },
+      { name:'쌈밥',       emoji:'🥬', allergens:['pork','soy'],            benefit:'다양한 잎채소로 식이섬유와 엽산을 풍부하게 섭취해요.' },
+      { name:'초밥',       emoji:'🍣', allergens:['fish','soy','shrimp'],   benefit:'생선의 고단백·저지방 영양소와 오메가3를 균형 있게 섭취해요.' },
+      { name:'쭈꾸미볶음', emoji:'🐙', allergens:['squid','soy'],           benefit:'타우린이 풍부해 간 해독과 피로 회복에 탁월해요.' },
+      { name:'낙지볶음',   emoji:'🐙', allergens:['squid','soy'],           benefit:'낙지의 타우린과 철분이 빈혈 예방과 혈액 건강에 좋아요.' },
+      { name:'두부조림',   emoji:'🫕', allergens:['soy'],                   benefit:'대두 단백질이 근육 유지와 콜레스테롤 개선에 도움을 줘요.' },
+      { name:'청국장',     emoji:'🍲', allergens:['soy'],                   benefit:'강력한 유산균이 장 건강을 개선하고 면역력을 높여줘요.' },
+      { name:'닭볶음탕',   emoji:'🍗', allergens:['chicken','soy'],         benefit:'닭고기 단백질과 감자의 칼륨이 근육·혈압 건강을 동시에 챙겨줘요.' },
+      { name:'곰탕',       emoji:'🥣', allergens:['beef','soy'],            benefit:'콜라겐과 젤라틴이 관절 건강과 피부 탄력을 개선해요.' },
+      { name:'훈제오리',   emoji:'🦆', allergens:[],                        benefit:'불포화지방산이 풍부해 혈관을 청소하고 심장 건강에 좋아요.' },
+      { name:'회덮밥',     emoji:'🐟', allergens:['fish','soy'],            benefit:'신선한 생선의 오메가3와 채소의 비타민이 어우러져 영양 균형이 뛰어나요.' },
+      { name:'솥밥',       emoji:'🍚', allergens:['soy'],                   benefit:'솥 바닥의 누룽지가 소화를 돕고 고소한 맛을 더해줘요.' },
+      { name:'오징어볶음', emoji:'🦑', allergens:['squid','soy'],           benefit:'오징어의 타우린이 눈의 피로를 줄이고 간 기능을 보호해요.' },
+      { name:'묵밥',       emoji:'🥣', allergens:[],                        benefit:'도토리묵의 아콘산이 체내 중금속 배출을 도와요. 칼로리가 낮고 수분이 풍부해 다이어트 중에도 좋아요.' },
+      { name:'비빔국수',   emoji:'🍜', allergens:['wheat','soy','egg'],     benefit:'고추장의 캡사이신이 신진대사를 높이고, 다양한 채소로 식이섬유를 충분히 섭취할 수 있어요.' },
     ]
   },
   {
-    id: 'dinner', title: '저녁식사', icon: '🌙', desc: '오늘 하루의 마무리',
-    items: [
-      { name: '스테이크',   emoji: '🥩', benefit: '철분·아연·비타민B12가 풍부해 적혈구 생성과 신경 기능을 도와요. 고단백으로 하루 근육 회복에 최적입니다.' },
-      { name: '삼겹살',     emoji: '🥓', benefit: '불포화지방산이 혈관 건강을 돕고, 마늘·상추와 함께 먹으면 항산화 효과가 배가돼요. 스트레스 해소에도 좋습니다.' },
-      { name: '갈비',       emoji: '🍖', benefit: '콜라겐이 풍부해 피부 탄력과 관절 건강에 좋아요. 뼈와 함께 구워지며 칼슘도 일부 흡수할 수 있습니다.' },
-      { name: '치킨',       emoji: '🍗', benefit: '고단백 저지방 음식으로 근육 형성을 도와요. 트립토판이 풍부해 수면의 질을 높이는 세로토닌 합성을 촉진합니다.' },
-      { name: '피자',       emoji: '🍕', benefit: '토마토소스의 라이코펜이 항산화 효과를 발휘해요. 치즈의 칼슘과 단백질로 뼈 건강을 지원하고 포만감이 높습니다.' },
-      { name: '파스타',     emoji: '🍝', benefit: '복합 탄수화물이 포만감을 오래 유지시켜요. 올리브오일의 불포화지방산이 심혈관 건강에 좋고 항산화 효과도 있어요.' },
-      { name: '보쌈',       emoji: '🥬', benefit: '삶은 돼지고기는 지방이 빠져 담백하고, 굴젓·새우젓이 소화를 도와줘요. 배추의 식이섬유가 장 건강에도 좋습니다.' },
-      { name: '족발',       emoji: '🍖', benefit: '콜라겐과 젤라틴이 풍부해 피부 탄력 유지에 탁월해요. 필수아미노산이 풍부하고 쫄깃한 식감이 스트레스 해소에 좋아요.' },
-      { name: '탕수육',     emoji: '🍱', benefit: '돼지고기 단백질과 채소 소스의 비타민이 균형을 이뤄요. 달콤새콤한 맛이 식욕을 돋우고 기분 전환에 도움을 줍니다.' },
-      { name: '마라탕',     emoji: '🌶️', benefit: '마라의 화자오 성분이 혈액순환을 촉진하고 신진대사를 높여요. 다양한 채소와 버섯으로 식이섬유도 풍부하게 섭취해요.' },
-      { name: '샤브샤브',   emoji: '🍲', benefit: '끓는 육수에 살짝 데쳐 지방을 줄인 건강한 조리법이에요. 다양한 채소를 함께 먹어 비타민·미네랄을 균형 있게 섭취해요.' },
-      { name: '해물파전',   emoji: '🥘', benefit: '굴·새우·오징어의 타우린이 피로 회복과 간 건강에 좋아요. 파의 알리신이 혈관을 청소하고 항균 작용을 합니다.' },
-      { name: '닭갈비',     emoji: '🍗', benefit: '고추장 양념이 캡사이신으로 지방 분해를 도와요. 닭고기와 채소의 조합으로 단백질·비타민을 동시에 섭취할 수 있어요.' },
-      { name: '수육',       emoji: '🥩', benefit: '삶아서 기름을 제거해 소화가 잘 되고 담백해요. 김치와 함께 먹으면 유산균과 단백질의 시너지 효과를 볼 수 있어요.' },
-      { name: '곱창',       emoji: '🍢', benefit: '철분과 비타민B12가 매우 풍부해 빈혈 예방에 탁월해요. 콜라겐이 많아 피부 건강에도 좋고 독특한 식감이 매력적입니다.' },
-      { name: '감자탕',     emoji: '🥣', benefit: '돼지 등뼈의 칼슘과 감자의 칼륨이 뼈와 혈압 건강을 도와요. 얼큰한 국물이 체온을 높이고 추운 날 몸을 녹여줍니다.' },
-      { name: '부대찌개',   emoji: '🍲', benefit: '풍부한 재료로 단백질과 채소를 한 번에 섭취할 수 있어요. 김치의 유산균과 다양한 식재료의 시너지가 영양 균형을 맞춰줘요.' },
-      { name: '불닭',       emoji: '🌶️', benefit: '캡사이신이 엔도르핀 분비를 촉진해 기분을 좋게 해요. 닭고기의 고단백이 근육 회복을 돕고 매운맛이 신진대사를 높입니다.' },
-      { name: '양꼬치',     emoji: '🍢', benefit: '양고기의 L-카르니틴이 지방 연소를 도와요. 철분과 아연이 풍부해 빈혈 예방과 면역력 강화에 효과적입니다.' },
-      { name: '새우구이',   emoji: '🍤', benefit: '저칼로리 고단백 식품으로 다이어트에 최적이에요. 아스타잔틴이 강력한 항산화 효과를 발휘해 노화 방지에 도움을 줍니다.' },
-      { name: '꽃게탕',     emoji: '🦀', benefit: '게의 키토산이 면역력을 높이고 콜레스테롤을 낮춰줘요. 칼슘·아연이 풍부해 뼈 건강과 면역 기능을 동시에 챙길 수 있어요.' },
-      { name: '막창',       emoji: '🍖', benefit: '비타민B12와 철분이 풍부해 빈혈 예방에 탁월해요. 특유의 쫄깃한 식감과 고소한 맛이 스트레스 해소에 도움을 줍니다.' },
-      { name: '차돌박이',   emoji: '🥩', benefit: '마블링의 불포화지방산이 고소한 풍미를 더하고 에너지를 공급해요. 철분과 단백질이 풍부해 활력 보충에 효과적입니다.' },
-      { name: '해물탕',     emoji: '🦞', benefit: '다양한 해산물의 타우린·오메가3·아연이 집약돼 있어요. 시원한 국물이 피로 회복과 숙취 해소에 매우 효과적입니다.' },
-      { name: '갈치조림',   emoji: '🐟', benefit: '갈치의 DHA와 EPA가 뇌 기능과 심혈관 건강을 동시에 챙겨줘요. 비타민D가 풍부해 뼈 건강과 면역력 향상에도 도움을 줍니다.' },
-      { name: '고등어조림', emoji: '🐟', benefit: '오메가3가 풍부해 혈중 중성지방을 낮추고 심장을 보호해요. 고등어의 DHA가 두뇌 발달과 기억력 유지에 특히 좋습니다.' },
-      { name: '아구찜',     emoji: '🐡', benefit: '아구의 콜라겐이 관절 건강과 피부 탄력에 좋아요. 콩나물의 아스파라긴산이 숙취 해소에 도움을 주고 기력을 회복시켜 줍니다.' },
-      { name: '전골',       emoji: '🍲', benefit: '다양한 채소와 단백질이 한솥에 어우러져 영양 균형이 탁월해요. 끓이면서 먹는 방식이 체온을 유지하고 소화를 촉진합니다.' },
-      { name: '오리구이',   emoji: '🦆', benefit: '리놀레산 등 불포화지방산이 혈관 건강을 지켜줘요. 비타민B군이 풍부해 피로 회복과 에너지 대사 활성화에 도움을 줍니다.' },
+    id:'dinner', title:'저녁식사', icon:'🌙', desc:'오늘 하루의 마무리',
+    items:[
+      { name:'스테이크',    emoji:'🥩', allergens:['beef'],                      benefit:'철분·아연·비타민B12가 풍부해 적혈구 생성과 신경 기능을 도와요. 고단백으로 하루 근육 회복에 최적입니다.' },
+      { name:'삼겹살',      emoji:'🥓', allergens:['pork'],                      benefit:'불포화지방산이 혈관 건강을 돕고, 마늘·상추와 함께 먹으면 항산화 효과가 배가돼요.' },
+      { name:'갈비',        emoji:'🍖', allergens:['beef','soy'],                benefit:'콜라겐이 풍부해 피부 탄력과 관절 건강에 좋아요.' },
+      { name:'치킨',        emoji:'🍗', allergens:['chicken','wheat','egg'],     benefit:'고단백 저지방 음식으로 근육 형성을 도와요. 트립토판이 풍부해 수면의 질을 높이는 세로토닌 합성을 촉진합니다.' },
+      { name:'피자',        emoji:'🍕', allergens:['wheat','dairy','egg'],       benefit:'토마토소스의 라이코펜이 항산화 효과를 발휘해요.' },
+      { name:'파스타',      emoji:'🍝', allergens:['wheat','egg'],               benefit:'복합 탄수화물이 포만감을 오래 유지시켜요. 올리브오일의 불포화지방산이 심혈관 건강에 좋아요.' },
+      { name:'보쌈',        emoji:'🥬', allergens:['pork','soy'],                benefit:'삶은 돼지고기는 지방이 빠져 담백하고, 굴젓·새우젓이 소화를 도와줘요.' },
+      { name:'족발',        emoji:'🍖', allergens:['pork'],                      benefit:'콜라겐과 젤라틴이 풍부해 피부 탄력 유지에 탁월해요.' },
+      { name:'탕수육',      emoji:'🍱', allergens:['pork','wheat'],              benefit:'돼지고기 단백질과 채소 소스의 비타민이 균형을 이뤄요.' },
+      { name:'마라탕',      emoji:'🌶️', allergens:['soy','shrimp','beef'],      benefit:'마라의 화자오 성분이 혈액순환을 촉진하고 신진대사를 높여요.' },
+      { name:'샤브샤브',    emoji:'🍲', allergens:['beef','soy'],                benefit:'끓는 육수에 살짝 데쳐 지방을 줄인 건강한 조리법이에요.' },
+      { name:'해물파전',    emoji:'🥘', allergens:['wheat','egg','shrimp','squid'], benefit:'굴·새우·오징어의 타우린이 피로 회복과 간 건강에 좋아요.' },
+      { name:'닭갈비',      emoji:'🍗', allergens:['chicken','soy'],             benefit:'고추장 양념이 캡사이신으로 지방 분해를 도와요.' },
+      { name:'수육',        emoji:'🥩', allergens:['pork'],                      benefit:'삶아서 기름을 제거해 소화가 잘 되고 담백해요.' },
+      { name:'곱창',        emoji:'🍢', allergens:['pork'],                      benefit:'철분과 비타민B12가 매우 풍부해 빈혈 예방에 탁월해요.' },
+      { name:'감자탕',      emoji:'🥣', allergens:['pork','soy'],                benefit:'돼지 등뼈의 칼슘과 감자의 칼륨이 뼈와 혈압 건강을 도와요.' },
+      { name:'부대찌개',    emoji:'🍲', allergens:['pork','wheat','soy'],        benefit:'풍부한 재료로 단백질과 채소를 한 번에 섭취할 수 있어요.' },
+      { name:'불닭',        emoji:'🌶️', allergens:['chicken','soy'],             benefit:'캡사이신이 엔도르핀 분비를 촉진해 기분을 좋게 해요.' },
+      { name:'양꼬치',      emoji:'🍢', allergens:[],                            benefit:'양고기의 L-카르니틴이 지방 연소를 도와요. 철분과 아연이 풍부해 빈혈 예방과 면역력 강화에 효과적입니다.' },
+      { name:'새우구이',    emoji:'🍤', allergens:['shrimp'],                    benefit:'저칼로리 고단백 식품으로 다이어트에 최적이에요. 아스타잔틴이 강력한 항산화 효과를 발휘합니다.' },
+      { name:'꽃게탕',      emoji:'🦀', allergens:['crab','shellfish'],          benefit:'게의 키토산이 면역력을 높이고 콜레스테롤을 낮춰줘요.' },
+      { name:'막창',        emoji:'🍖', allergens:['pork'],                      benefit:'비타민B12와 철분이 풍부해 빈혈 예방에 탁월해요.' },
+      { name:'차돌박이',    emoji:'🥩', allergens:['beef'],                      benefit:'마블링의 불포화지방산이 고소한 풍미를 더하고 에너지를 공급해요.' },
+      { name:'해물탕',      emoji:'🦞', allergens:['shrimp','crab','squid','shellfish'], benefit:'다양한 해산물의 타우린·오메가3·아연이 집약돼 있어요.' },
+      { name:'갈치조림',    emoji:'🐟', allergens:['fish','soy'],                benefit:'갈치의 DHA와 EPA가 뇌 기능과 심혈관 건강을 동시에 챙겨줘요.' },
+      { name:'고등어조림',  emoji:'🐟', allergens:['fish','soy'],                benefit:'오메가3가 풍부해 혈중 중성지방을 낮추고 심장을 보호해요.' },
+      { name:'아구찜',      emoji:'🐡', allergens:['fish','soy'],                benefit:'아구의 콜라겐이 관절 건강과 피부 탄력에 좋아요.' },
+      { name:'전골',        emoji:'🍲', allergens:['beef','soy'],                benefit:'다양한 채소와 단백질이 한솥에 어우러져 영양 균형이 탁월해요.' },
+      { name:'오리구이',    emoji:'🦆', allergens:[],                            benefit:'리놀레산 등 불포화지방산이 혈관 건강을 지켜줘요.' },
+      { name:'낙곱새',      emoji:'🐙', allergens:['squid','pork','shrimp','soy'], benefit:'낙지·곱창·새우의 영양이 한 번에! 타우린과 철분이 풍부해 피로 회복과 빈혈 예방에 탁월합니다.' },
     ]
   },
   {
-    id: 'dessert', title: '디저트', icon: '🍰', desc: '달콤한 마무리',
-    items: [
-      { name: '아이스크림', emoji: '🍦', benefit: '칼슘과 단백질이 포함돼 있어요. 더운 날 체온을 낮추고 달콤함이 세로토닌 분비를 촉진해 기분을 좋게 해줍니다.' },
-      { name: '케이크',     emoji: '🎂', benefit: '달걀·유제품의 단백질과 칼슘을 공급해요. 과일 장식을 곁들이면 비타민도 함께 섭취할 수 있어 특별한 날에 딱 어울려요.' },
-      { name: '마카롱',     emoji: '🍬', benefit: '아몬드 가루의 건강한 지방과 식이섬유가 들어있어요. 한 입 크기로 적당한 당분 보충이 되고 정서적 만족감을 줍니다.' },
-      { name: '붕어빵',     emoji: '🐟', benefit: '팥의 식이섬유와 철분이 장 건강과 빈혈 예방에 좋아요. 따뜻하게 먹으면 체온 유지에 도움이 되고 겨울철 최고 간식입니다.' },
-      { name: '호떡',       emoji: '🥞', benefit: '흑설탕과 계피의 시나몬이 혈당 조절을 도와요. 견과류가 들어간 호떡은 불포화지방산과 비타민E까지 섭취할 수 있어요.' },
-      { name: '팥빙수',     emoji: '🧊', benefit: '팥의 안토시아닌이 항산화 작용을 해요. 더운 날 체온을 낮추고 수분을 공급하며, 팥의 식이섬유가 포만감을 줍니다.' },
-      { name: '와플',       emoji: '🧇', benefit: '밀가루·달걀·우유의 탄수화물과 단백질이 에너지를 보충해요. 과일과 함께 먹으면 비타민도 섭취할 수 있어요.' },
-      { name: '크레페',     emoji: '🌯', benefit: '얇은 반죽으로 칼로리 부담이 낮아요. 과일·채소 필링을 넣으면 식이섬유와 비타민을 동시에 섭취할 수 있습니다.' },
-      { name: '티라미수',   emoji: '🍰', benefit: '에스프레소의 카페인이 집중력을 높이고, 마스카르포네 치즈의 칼슘이 뼈 건강에 좋아요. 코코아 파우더의 항산화 성분도 있어요.' },
-      { name: '도넛',       emoji: '🍩', benefit: '빠른 에너지 보충에 효과적이에요. 충전이 필요한 오후 시간대에 달콤한 기분 전환이 되고 다양한 토핑으로 즐길 수 있어요.' },
-      { name: '쿠키',       emoji: '🍪', benefit: '견과류 쿠키는 불포화지방산과 비타민E를 공급해요. 오트밀 쿠키는 식이섬유가 풍부해 다이어트 중 간식으로도 적합합니다.' },
-      { name: '푸딩',       emoji: '🍮', benefit: '달걀과 우유로 만들어 단백질과 칼슘이 풍부해요. 부드러운 식감으로 소화가 잘 되고 위장에 부담이 적어 남녀노소 즐길 수 있어요.' },
-      { name: '타르트',     emoji: '🥧', benefit: '과일 타르트는 비타민C와 항산화 물질을 섭취할 수 있어요. 커스터드의 달걀 단백질이 포만감을 주고 눈도 즐거운 디저트입니다.' },
-      { name: '초콜릿',     emoji: '🍫', benefit: '다크초콜릿의 플라보노이드가 심혈관 건강을 도와요. 세로토닌·도파민 분비를 촉진해 스트레스 해소와 기분 향상에 탁월합니다.' },
-      { name: '양갱',       emoji: '🍡', benefit: '팥의 식이섬유와 항산화 성분이 풍부해요. 지방이 거의 없고 천연 단맛으로 칼로리 부담이 낮은 전통 건강 디저트입니다.' },
-      { name: '카스텔라',   emoji: '🍰', benefit: '달걀이 듬뿍 들어가 단백질과 비타민D가 풍부해요. 촉촉하고 부드러워 소화가 잘 되고 어린이·노인 모두에게 적합해요.' },
-      { name: '젤리',       emoji: '🍬', benefit: '콜라겐 성분이 피부와 관절 건강에 도움을 줄 수 있어요. 과일 맛 젤리는 비타민이 강화된 제품도 있어 간편한 영양 보충이 됩니다.' },
-      { name: '식혜',         emoji: '🥤', benefit: '엿기름의 소화 효소가 식후 소화를 도와요. 천연 발효 음료로 장 건강에 좋고, 탄산음료 대신 즐기기에 훨씬 건강한 선택입니다.' },
-      { name: '찹쌀떡',       emoji: '🍡', benefit: '찹쌀의 아밀로펙틴이 빠르게 에너지를 공급해요. 소화가 잘 되는 편이고 팥 소의 식이섬유가 장 건강을 도와줍니다.' },
-      { name: '크림빵',       emoji: '🍞', benefit: '커스터드 크림의 달걀 단백질과 우유 칼슘을 간편하게 섭취할 수 있어요. 달콤하고 부드러워 기분 전환 간식으로 제격입니다.' },
-      { name: '브라우니',     emoji: '🍫', benefit: '다크초콜릿의 플라보노이드가 항산화 작용을 해요. 호두를 넣으면 오메가3와 비타민E까지 함께 섭취할 수 있어요.' },
-      { name: '치즈케이크',   emoji: '🎂', benefit: '크림치즈의 단백질과 칼슘이 풍부해요. 레몬을 곁들이면 비타민C도 섭취할 수 있고 진한 풍미로 적은 양에도 만족감이 높아요.' },
-      { name: '슈크림',       emoji: '🍮', benefit: '달걀과 우유 기반의 커스터드가 단백질·칼슘을 공급해요. 가벼운 슈 껍질 덕분에 칼로리 부담이 케이크보다 낮습니다.' },
-      { name: '약과',         emoji: '🍯', benefit: '참기름과 꿀로 만들어 불포화지방산과 천연 항균 성분을 섭취할 수 있어요. 생강·계피가 소화를 돕고 몸을 따뜻하게 해줍니다.' },
-      { name: '강정',         emoji: '🍡', benefit: '견과류나 쌀 강정은 식이섬유와 미네랄이 풍부해요. 입안에서 바삭하게 부서지는 식감이 스트레스 해소에도 도움이 됩니다.' },
-      { name: '찰떡 아이스크림', emoji: '🍦', benefit: '찹쌀의 탄수화물과 아이스크림의 칼슘을 동시에 즐길 수 있어요. 쫄깃한 식감과 차가운 내부가 독특한 식감 대비를 만들어냅니다.' },
-      { name: '에클레어',     emoji: '🍫', benefit: '슈 반죽의 달걀 단백질과 초콜릿 글레이즈의 플라보노이드가 포함돼 있어요. 크림 필링이 풍부해 소량으로도 만족감이 높은 고급 디저트예요.' },
-      { name: '몽블랑',       emoji: '🌰', benefit: '밤의 비타민C와 식이섬유가 풍부해 면역력을 높여줘요. 천연 단맛으로 정제당 섭취를 줄이면서 달콤함을 즐길 수 있어요.' },
-      { name: '생크림 케이크', emoji: '🎂', benefit: '신선한 생크림의 지용성 비타민 A·D·E가 함께 들어있어요. 과일 토핑으로 비타민C까지 보충할 수 있는 행복한 디저트입니다.' },
+    id:'dessert', title:'디저트', icon:'🍰', desc:'달콤한 마무리',
+    items:[
+      { name:'아이스크림',       emoji:'🍦', allergens:['dairy','egg'],           benefit:'칼슘과 단백질이 포함돼 있어요. 더운 날 체온을 낮추고 달콤함이 세로토닌 분비를 촉진해 기분을 좋게 해줍니다.' },
+      { name:'케이크',           emoji:'🎂', allergens:['wheat','egg','dairy'],   benefit:'달걀·유제품의 단백질과 칼슘을 공급해요. 과일 장식을 곁들이면 비타민도 함께 섭취할 수 있어요.' },
+      { name:'마카롱',           emoji:'🍬', allergens:['nut','egg'],             benefit:'아몬드 가루의 건강한 지방과 식이섬유가 들어있어요. 한 입 크기로 적당한 당분 보충이 됩니다.' },
+      { name:'붕어빵',           emoji:'🐟', allergens:['wheat','egg','dairy'],   benefit:'팥의 식이섬유와 철분이 장 건강과 빈혈 예방에 좋아요. 따뜻하게 먹으면 체온 유지에 도움이 됩니다.' },
+      { name:'호떡',             emoji:'🥞', allergens:['wheat','nut'],           benefit:'흑설탕과 계피의 시나몬이 혈당 조절을 도와요. 견과류가 들어간 호떡은 불포화지방산과 비타민E까지 섭취할 수 있어요.' },
+      { name:'팥빙수',           emoji:'🧊', allergens:['dairy'],                 benefit:'팥의 안토시아닌이 항산화 작용을 해요. 더운 날 체온을 낮추고 수분을 공급합니다.' },
+      { name:'와플',             emoji:'🧇', allergens:['wheat','egg','dairy'],   benefit:'밀가루·달걀·우유의 탄수화물과 단백질이 에너지를 보충해요.' },
+      { name:'크레페',           emoji:'🌯', allergens:['wheat','egg','dairy'],   benefit:'얇은 반죽으로 칼로리 부담이 낮아요. 과일·채소 필링을 넣으면 식이섬유와 비타민을 동시에 섭취할 수 있습니다.' },
+      { name:'티라미수',         emoji:'🍰', allergens:['egg','dairy'],           benefit:'에스프레소의 카페인이 집중력을 높이고, 마스카르포네 치즈의 칼슘이 뼈 건강에 좋아요.' },
+      { name:'도넛',             emoji:'🍩', allergens:['wheat','egg','dairy'],   benefit:'빠른 에너지 보충에 효과적이에요. 충전이 필요한 오후 시간대에 달콤한 기분 전환이 됩니다.' },
+      { name:'쿠키',             emoji:'🍪', allergens:['wheat','egg','dairy','nut'], benefit:'견과류 쿠키는 불포화지방산과 비타민E를 공급해요.' },
+      { name:'푸딩',             emoji:'🍮', allergens:['egg','dairy'],           benefit:'달걀과 우유로 만들어 단백질과 칼슘이 풍부해요.' },
+      { name:'타르트',           emoji:'🥧', allergens:['wheat','egg','dairy'],   benefit:'과일 타르트는 비타민C와 항산화 물질을 섭취할 수 있어요.' },
+      { name:'초콜릿',           emoji:'🍫', allergens:['dairy','nut'],           benefit:'다크초콜릿의 플라보노이드가 심혈관 건강을 도와요. 세로토닌·도파민 분비를 촉진합니다.' },
+      { name:'양갱',             emoji:'🍡', allergens:[],                        benefit:'팥의 식이섬유와 항산화 성분이 풍부해요. 지방이 거의 없고 천연 단맛으로 칼로리 부담이 낮습니다.' },
+      { name:'카스텔라',         emoji:'🍰', allergens:['wheat','egg','dairy'],   benefit:'달걀이 듬뿍 들어가 단백질과 비타민D가 풍부해요.' },
+      { name:'젤리',             emoji:'🍬', allergens:[],                        benefit:'콜라겐 성분이 피부와 관절 건강에 도움을 줄 수 있어요.' },
+      { name:'식혜',             emoji:'🥤', allergens:[],                        benefit:'엿기름의 소화 효소가 식후 소화를 도와요. 천연 발효 음료로 장 건강에 좋고, 탄산음료 대신 즐기기에 훨씬 건강합니다.' },
+      { name:'찹쌀떡',           emoji:'🍡', allergens:[],                        benefit:'찹쌀의 아밀로펙틴이 빠르게 에너지를 공급해요.' },
+      { name:'크림빵',           emoji:'🍞', allergens:['wheat','egg','dairy'],   benefit:'커스터드 크림의 달걀 단백질과 우유 칼슘을 간편하게 섭취할 수 있어요.' },
+      { name:'브라우니',         emoji:'🍫', allergens:['wheat','egg','dairy','nut'], benefit:'다크초콜릿의 플라보노이드가 항산화 작용을 해요.' },
+      { name:'치즈케이크',       emoji:'🎂', allergens:['dairy','egg','wheat'],   benefit:'크림치즈의 단백질과 칼슘이 풍부해요. 레몬을 곁들이면 비타민C도 섭취할 수 있어요.' },
+      { name:'슈크림',           emoji:'🍮', allergens:['wheat','egg','dairy'],   benefit:'달걀과 우유 기반의 커스터드가 단백질·칼슘을 공급해요.' },
+      { name:'약과',             emoji:'🍯', allergens:['wheat'],                 benefit:'참기름과 꿀로 만들어 불포화지방산과 천연 항균 성분을 섭취할 수 있어요.' },
+      { name:'강정',             emoji:'🍡', allergens:['nut'],                   benefit:'견과류나 쌀 강정은 식이섬유와 미네랄이 풍부해요.' },
+      { name:'찰떡 아이스크림',  emoji:'🍦', allergens:['dairy'],                 benefit:'찹쌀의 탄수화물과 아이스크림의 칼슘을 동시에 즐길 수 있어요.' },
+      { name:'에클레어',         emoji:'🍫', allergens:['wheat','egg','dairy'],   benefit:'슈 반죽의 달걀 단백질과 초콜릿 글레이즈의 플라보노이드가 포함돼 있어요.' },
+      { name:'몽블랑',           emoji:'🌰', allergens:['nut','dairy','egg'],     benefit:'밤의 비타민C와 식이섬유가 풍부해 면역력을 높여줘요.' },
+      { name:'생크림 케이크',    emoji:'🎂', allergens:['dairy','egg','wheat'],   benefit:'신선한 생크림의 지용성 비타민 A·D·E가 함께 들어있어요.' },
+      { name:'수제 아이스바',    emoji:'🧊', allergens:[],                        benefit:'과일 100% 아이스바는 첨가물 없이 비타민과 항산화 물질을 그대로 섭취할 수 있어요.' },
     ]
   }
 ];
 
-/* ── 다크/라이트 모드 ── */
-const html  = document.documentElement;
-const btn   = document.getElementById('themeToggle');
-const icon  = document.getElementById('themeIcon');
-const label = document.getElementById('themeLabel');
+/* ══════════════════════════════════════
+   ALLERGEN FILTER STATE
+══════════════════════════════════════ */
+const selectedAllergens = new Set(JSON.parse(localStorage.getItem('allergens') || '[]'));
 
-const SUN_PATH  = 'M12 3v1m0 16v1M4.22 4.22l.7.7m12.16 12.16.7.7M1 12h2m18 0h2M4.22 19.78l.7-.7M18.36 5.64l.7-.7M12 7a5 5 0 1 0 0 10A5 5 0 0 0 12 7z';
-const MOON_PATH = 'M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z';
+function saveAllergens() {
+  localStorage.setItem('allergens', JSON.stringify([...selectedAllergens]));
+}
+
+function isExcluded(item) {
+  if (!selectedAllergens.size) return false;
+  return item.allergens.some(a => selectedAllergens.has(a));
+}
+
+/* ── allergen panel toggle ── */
+const panel = document.getElementById('allergenPanel');
+document.getElementById('allergenToggle').addEventListener('click', () => {
+  panel.classList.toggle('open');
+});
+
+/* ── build allergen chips ── */
+const chipsEl = document.getElementById('allergenChips');
+ALLERGENS.forEach(a => {
+  const chip = document.createElement('button');
+  chip.className = 'allergen-chip' + (selectedAllergens.has(a.id) ? ' selected' : '');
+  chip.dataset.id = a.id;
+  chip.innerHTML = `<span class="allergen-chip-icon">${a.icon}</span>${a.label}`;
+  chip.addEventListener('click', () => {
+    if (selectedAllergens.has(a.id)) { selectedAllergens.delete(a.id); chip.classList.remove('selected'); }
+    else                             { selectedAllergens.add(a.id);    chip.classList.add('selected'); }
+    saveAllergens();
+    updateAll();
+  });
+  chipsEl.appendChild(chip);
+});
+
+document.getElementById('allergenReset').addEventListener('click', () => {
+  selectedAllergens.clear();
+  chipsEl.querySelectorAll('.allergen-chip').forEach(c => c.classList.remove('selected'));
+  saveAllergens();
+  updateAll();
+});
+
+function updateAllergenBadge() {
+  const badge = document.getElementById('allergenCount');
+  if (selectedAllergens.size) {
+    badge.textContent = `${selectedAllergens.size}개 성분 제외 중`;
+    badge.classList.add('visible');
+  } else {
+    badge.classList.remove('visible');
+  }
+}
+
+/* ══════════════════════════════════════
+   DARK / LIGHT MODE
+══════════════════════════════════════ */
+const html  = document.documentElement;
+const tBtn  = document.getElementById('themeToggle');
+const tIcon = document.getElementById('themeIcon');
+const tLbl  = document.getElementById('themeLabel');
+const SUN   = 'M12 3v1m0 16v1M4.22 4.22l.7.7m12.16 12.16.7.7M1 12h2m18 0h2M4.22 19.78l.7-.7M18.36 5.64l.7-.7M12 7a5 5 0 1 0 0 10A5 5 0 0 0 12 7z';
+const MOON  = 'M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z';
 
 setTheme(localStorage.getItem('theme') || 'dark');
-
-btn.addEventListener('click', () => {
-  setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
-});
+tBtn.addEventListener('click', () => setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
 
 function setTheme(t) {
   html.dataset.theme = t;
   localStorage.setItem('theme', t);
   if (t === 'dark') {
-    icon.querySelector('path') ? icon.querySelector('path').setAttribute('d', MOON_PATH) : icon.innerHTML = `<path d="${MOON_PATH}"/>`;
-    label.textContent = '라이트 모드';
+    (tIcon.querySelector('path') || tIcon.appendChild(document.createElementNS('http://www.w3.org/2000/svg','path'))).setAttribute('d', MOON);
+    tLbl.textContent = '라이트 모드';
   } else {
-    icon.innerHTML = `<path d="${SUN_PATH}" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>`;
-    label.textContent = '다크 모드';
+    tIcon.innerHTML = `<path d="${SUN}" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+    tLbl.textContent = '다크 모드';
   }
 }
 
-/* ── 랜덤 피커 ── */
+/* ══════════════════════════════════════
+   RANDOM PICKER
+══════════════════════════════════════ */
 const historyMap = {};
+const catNames = { breakfast:'아침식사', lunch:'점심식사', dinner:'저녁식사', dessert:'디저트' };
+const allergenLabels = Object.fromEntries(ALLERGENS.map(a => [a.id, a.label]));
 
 function pickRandom(items, cur) {
-  if (items.length <= 1) return items[0];
+  const pool = items.filter(i => !isExcluded(i));
+  if (!pool.length) return null;
+  if (pool.length === 1) return pool[0];
   let n;
-  do { n = items[Math.floor(Math.random() * items.length)]; } while (n.name === cur);
+  do { n = pool[Math.floor(Math.random() * pool.length)]; } while (n.name === cur);
   return n;
 }
 
@@ -738,15 +591,17 @@ function buildPickerCard(cat) {
       <div>
         <div class="card-title">${cat.title}</div>
         <div class="card-desc">${cat.desc}</div>
+        <div class="card-available" id="avail-${cat.id}"></div>
       </div>
       <span class="card-arrow">▼</span>
     </div>
     <div class="card-body">
       <div class="meal-display">
         <div class="meal-label">Recommended</div>
-        <div class="meal-emoji" id="emoji-${cat.id}"></div>
-        <div class="meal-name"  id="name-${cat.id}">— 선택 전 —</div>
+        <div class="meal-emoji"   id="emoji-${cat.id}"></div>
+        <div class="meal-name"    id="name-${cat.id}">— 선택 전 —</div>
         <div class="meal-benefit" id="benefit-${cat.id}"></div>
+        <div class="meal-allergens" id="mal-${cat.id}"></div>
       </div>
       <button class="pick-btn" id="btn-${cat.id}">✦ 랜덤 선택</button>
       <div class="history" id="history-${cat.id}" style="display:none">
@@ -758,8 +613,10 @@ function buildPickerCard(cat) {
   card.querySelector('.card-header').addEventListener('click', () => card.classList.toggle('open'));
 
   let cur = null;
-  card.querySelector(`#btn-${cat.id}`).addEventListener('click', () => {
+  const pickBtn = card.querySelector(`#btn-${cat.id}`);
+  pickBtn.addEventListener('click', () => {
     const p = pickRandom(cat.items, cur);
+    if (!p) return;
     if (cur && cur !== p.name) {
       const h = historyMap[cat.id];
       if (!h.includes(cur)) { h.unshift(cur); if (h.length > 5) h.pop(); }
@@ -769,14 +626,20 @@ function buildPickerCard(cat) {
     const ne = document.getElementById(`name-${cat.id}`);
     const ee = document.getElementById(`emoji-${cat.id}`);
     const be = document.getElementById(`benefit-${cat.id}`);
-    [ne, ee, be].forEach(el => el.classList.remove('show'));
+    const ma = document.getElementById(`mal-${cat.id}`);
+    [ne, ee, be, ma].forEach(el => el.classList.remove('show'));
     setTimeout(() => {
       ne.textContent = p.name;
       ee.textContent = p.emoji;
       be.textContent = p.benefit;
+      ma.innerHTML = p.allergens.length
+        ? p.allergens.map(a => `<span class="allergen-tag">${allergenLabels[a]||a}</span>`).join('')
+        : '';
       [ne, ee, be].forEach(el => el.classList.add('show'));
+      if (p.allergens.length) ma.classList.add('show');
     }, 110);
   });
+
   return card;
 }
 
@@ -789,38 +652,60 @@ function updateHistory(id) {
   tags.innerHTML = list.map(n => `<span class="history-tag">${n}</span>`).join('');
 }
 
+function updatePickerAvailability() {
+  categories.forEach(cat => {
+    const pool = cat.items.filter(i => !isExcluded(i));
+    const avail = document.getElementById(`avail-${cat.id}`);
+    const btn   = document.getElementById(`btn-${cat.id}`);
+    if (!avail) return;
+    if (selectedAllergens.size) {
+      avail.textContent = `${pool.length} / ${cat.items.length}개 선택 가능`;
+      avail.className = 'card-available' + (pool.length < 3 ? ' low' : '');
+      if (btn) btn.disabled = pool.length === 0;
+    } else {
+      avail.textContent = '';
+      if (btn) btn.disabled = false;
+    }
+  });
+}
+
 const pickerGrid = document.getElementById('pickerGrid');
 categories.forEach(cat => pickerGrid.appendChild(buildPickerCard(cat)));
 
-/* ── 전체 메뉴 ── */
-const catNames = { breakfast:'아침식사', lunch:'점심식사', dinner:'저녁식사', dessert:'디저트' };
+/* ══════════════════════════════════════
+   ALL FOOD GRID
+══════════════════════════════════════ */
+let currentFilter = 'all';
 
 function buildAllGrid(filter) {
+  currentFilter = filter;
   const g = document.getElementById('allGrid');
   g.innerHTML = '';
   categories.forEach(cat => {
     if (filter !== 'all' && filter !== cat.id) return;
     cat.items.forEach(item => {
       const fc = document.createElement('div');
-      fc.className = 'food-card';
+      fc.className = 'food-card' + (isExcluded(item) ? ' excluded' : '');
       fc.dataset.cat = cat.id;
+      const allergenTags = item.allergens.length
+        ? `<div class="food-card-allergen-list">${item.allergens.map(a=>`<span class="food-allergen-tag">${allergenLabels[a]||a}</span>`).join('')}</div>`
+        : '';
       fc.innerHTML = `
         <div class="food-card-top">
           <span class="food-card-emoji">${item.emoji}</span>
           <div>
             <div class="food-card-name">${item.name}</div>
             <span class="food-card-cat">${catNames[cat.id]}</span>
+            ${allergenTags}
           </div>
         </div>
         <div class="food-card-benefit">${item.benefit}</div>
       `;
-      fc.addEventListener('click', () => fc.classList.toggle('expanded'));
+      if (!isExcluded(item)) fc.addEventListener('click', () => fc.classList.toggle('expanded'));
       g.appendChild(fc);
     });
   });
 }
-
-buildAllGrid('all');
 
 document.getElementById('filterTabs').addEventListener('click', e => {
   const b = e.target.closest('.tab-btn');
@@ -829,6 +714,17 @@ document.getElementById('filterTabs').addEventListener('click', e => {
   b.classList.add('active');
   buildAllGrid(b.dataset.filter);
 });
+
+/* ══════════════════════════════════════
+   UPDATE ALL (called when allergen changes)
+══════════════════════════════════════ */
+function updateAll() {
+  updateAllergenBadge();
+  updatePickerAvailability();
+  buildAllGrid(currentFilter);
+}
+
+updateAll();
 </script>
 </body>
 </html>
